@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/GMS_repository/!svn/ver/64/trunk/GMS/src/com/iss/gms/service
+END
+IProjectService.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/service/IProjectService.java
+END
+UserServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/service/UserServiceImpl.java
+END
+EmployeeServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/service/EmployeeServiceImpl.java
+END
+HoursWorkService.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/service/HoursWorkService.java
+END
+HoursWorkServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/service/HoursWorkServiceImpl.java
+END
+IUserService.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/service/IUserService.java
+END
+IEmployeeService.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/service/IEmployeeService.java
+END
+ProjectServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/service/ProjectServiceImpl.java
+END

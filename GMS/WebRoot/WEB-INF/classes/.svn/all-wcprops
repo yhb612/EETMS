@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/GMS_repository/!svn/ver/73/trunk/GMS/src
+END
+gms.properties
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/GMS_repository/!svn/ver/79/trunk/GMS/src/gms.properties
+END
+spring.xml
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/spring.xml
+END
+SqlMapConfig.xml
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/SqlMapConfig.xml
+END
+log4j.properties
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/log4j.properties
+END

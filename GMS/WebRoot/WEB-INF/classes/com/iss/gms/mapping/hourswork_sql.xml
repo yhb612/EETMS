@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >     
+    
+<sqlMap namespace="hourswork">
+	 <typeAlias alias="hoursWorkStdInfo" type="com.iss.gms.entity.HoursWorkStandardInfo"/>
+	 <typeAlias alias="hoursDetailInfo" type="com.iss.gms.entity.EmployeeHoursDetailInfo"/>
+	 <typeAlias alias="employeeBasicInfo" type="com.iss.gms.entity.EmployeeBasicInfo"/>
+	 <typeAlias alias="employeeRelegationInfo" type="com.iss.gms.entity.EmployeeRelegationInfo"/>
+	 <typeAlias alias="statistics4EveryGapType" type="com.iss.gms.entity.Statistics4EveryGapType"/>
+	 <typeAlias alias="customerVerifyHoursInfo" type="com.iss.gms.entity.CustomerVerifyHoursInfo"/>
+	 <typeAlias alias="hoursWorkStatisticsInfo" type="com.iss.gms.entity.HoursWorkStatisticsInfo"/>
+	 <typeAlias alias="cusIncomeQueryInfo" type="com.iss.gms.entity.CusIncomeQueryInfo"/>
+	 
+<!-- 标准工时信息  开始 -->
+	 <!-- 查询标准工时 -->
+	 <select id="queryStdHourswork" parameterClass="hoursWorkStdInfo" resultClass="hoursWorkStdInfo" >
+	 	select * from standard_hours_info where 1=1 
+		<isNotEmpty prepend="AND"  property="startDate" >
+	 		STANDARDDATE &gt;= #startDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="endDate" >
+	 		STANDARDDATE &lt;= #endDate#
+	 	</isNotEmpty>
+	 	order by STANDARDDATE
+	 </select>
+	 <!-- 查询三种日期类型各自的总天数 -->
+	 <select id="queryCountOfEveryType"  parameterClass="hoursWorkStdInfo" resultClass="hoursWorkStdInfo" >
+		select sum(case when STANDARDDATETYPE=0 THEN 1 ELSE 0 END ) as workDays, 
+		sum(case when STANDARDDATETYPE=1 THEN 1 ELSE 0 END ) as weekEndDays, 
+		sum(case when STANDARDDATETYPE=2 THEN 1 ELSE 0 END ) as redLetterDays 
+		from(
+			select * from standard_hours_info where 1=1 
+			<isNotEmpty prepend="AND"  property="startDate" >
+		 		STANDARDDATE &gt;= #startDate#
+		 	</isNotEmpty>
+		 	<isNotEmpty prepend="AND"  property="endDate" >
+		 		STANDARDDATE &lt;= #endDate#
+		 	</isNotEmpty>
+	 	)
+	 </select>
+	 <select id="queryDateType" parameterClass="java.util.Date" resultClass="java.lang.String">
+	 	SELECT STANDARDDATETYPE FROM STANDARD_HOURS_INFO WHERE STANDARDDATE=#date2check#
+	 </select>
+	 <insert id="addStdHoursworkInfo" parameterClass="hoursWorkStdInfo">
+	 	INSERT INTO standard_hours_info(STANDARDDATE,STANDARDWEEK,STANDARDDATETYPE,STANDARDHOURS)
+	 	VALUES(#standardDate#,#standardWeek#,#standardDateType#,#standardHours#)
+	 </insert>
+	 <select id="queryStdInfoByDate" parameterClass="java.util.Date"  resultClass="hoursWorkStdInfo" >
+	 	select * from standard_hours_info where STANDARDDATE=#date#
+	 </select>
+	 <delete id="delStdInfoByDate" parameterClass="java.util.Date">
+	 	delete from standard_hours_info where STANDARDDATE=#date#
+	 </delete>
+	 
+<!-- 标准工时信息  结束 -->
+
+
+<!-- 工时统计(对帐单)功能  开始 -->
+	 <select id="queryWtDetail4CheckPart1"  parameterClass="employeeBasicInfo" resultClass="employeeBasicInfo" >
+	 	select * from employee_basic_info where EMPLOYEEID= #employeeId#
+	 </select>
+	 <select id="queryWtDetail4CheckPart2"  parameterClass="hoursWorkStatisticsInfo" resultClass="hoursDetailInfo" >
+	 	select sum(ehdi.STANDARDHOURS) as standardHoursAll,sum(ehdi.CUSTOMERVERIFYHOURS) as customerVerifyHoursAll from 
+	 	(select * from employee_hours_detail_info where EMPLOYEEID=#employeeId# AND STANDARDDATE &lt;= #byTheStatisticalDate#) ehdi
+	 </select>
+	 <select id="queryWtDetail4CheckPart3"  parameterClass="employeeBasicInfo" resultClass="hoursWorkStatisticsInfo" >
+	 	select * from employee_hours_statistics_info where EMPLOYEEID=#employeeId#
+	 </select>
+	 <select id="queryGapHoursList" resultClass="statistics4EveryGapType" parameterClass="employeeBasicInfo">
+	 	select egv.gaptype, sum(egv.WRITEOFFHOURS) as count4Type from 
+	 	(select * from employee_hours_detail_info where EMPLOYEEID=#employeeId#) egv group by egv.gaptype
+	 </select>
+	<select id="queryCusDateCount" parameterClass="hoursDetailInfo" resultClass="java.lang.String">
+		select count(*) from employee_hours_detail_info where EMPLOYEEID=#employeeId# 
+		AND STANDARDDATE &gt;= #startDate# AND STANDARDDATE &lt;= #endDate#
+		AND STANDARDDATETYPE='0' AND CUSTOMERVERIFYHOURS!=0
+	</select>
+<!-- 工时统计(对帐单)功能  结束 -->
+
+
+<!-- GAP工时核查  开始 -->
+	<!-- 查询所有人 -->
+	<select id="queryGapInfo" parameterClass="hoursDetailInfo" resultClass="hoursDetailInfo">
+		select * from employee_hours_detail_info where 1=1
+		<isNotEmpty prepend="AND"  property="employeeId" >
+	 		(EMPLOYEEID=#employeeId# OR EMPLOYEENAME=#employeeId#)
+	 	</isNotEmpty>
+		<isNotEmpty prepend="AND"  property="startDate" >
+	 		STANDARDDATE &gt;= #startDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="endDate" >
+	 		STANDARDDATE &lt;= #endDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="signG" >
+	 		CURRENTGAPHOURS &gt; 0
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="signL" >
+	 		CURRENTGAPHOURS &lt; 0
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="workPlace" >
+	 		WORKPLACE = #workPlace#
+	 	</isNotEmpty>
+	 	ORDER BY EMPLOYEENAME,STANDARDDATE
+	</select>
+	
+	<!-- 查询与‘客户确认工时’相关的人 -->
+	<select id="queryGapInfoWithCus" parameterClass="hoursDetailInfo" resultClass="hoursDetailInfo">
+		select * from employee_hours_detail_info where 
+		EMPLOYEEID in (
+		select distinct h.employeeid from customer_verify_hours_info h where h.workdate between #startDate# and #endDate#
+		)
+		<isNotEmpty prepend="AND"  property="employeeId" >
+	 		(EMPLOYEEID=#employeeId# OR EMPLOYEENAME=#employeeId#)
+	 	</isNotEmpty>
+		<isNotEmpty prepend="AND"  property="startDate" >
+	 		STANDARDDATE &gt;= #startDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="endDate" >
+	 		STANDARDDATE &lt;= #endDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="signG" >
+	 		CURRENTGAPHOURS &gt; 0
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="signL" >
+	 		CURRENTGAPHOURS &lt; 0
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="workPlace" >
+	 		WORKPLACE = #workPlace#
+	 	</isNotEmpty>
+	 	ORDER BY EMPLOYEENAME,STANDARDDATE
+	</select>
+	
+	<update id="modifyGapInfo" parameterClass="hoursDetailInfo">
+		UPDATE EMPLOYEE_HOURS_DETAIL_INFO SET CURRENTGAPHOURS=#currentGapHours#,GAPTYPE=#gapType#,EMPLOYEEGAPREASON=#employeeGapReason#,
+		CUSTOMERRESPONSIBLEPERSON=#customerResponsiblePerson#,
+		COMPANYPROJECTMANAGER=#companyProjectManager#,
+		BELONGEDPROJECT=#belongedProject#,
+		WRITEOFFHOURS=#writeOffHours#
+		WHERE EMPLOYEEID=#employeeId# AND STANDARDDATE = #standardDate#
+	</update>
+<!-- GAP工时核查  结束 -->
+
+<!-- 客户确认工时信息  开始 -->
+	 <!-- 添加客户确认工时 -->
+	 <insert id="addCstmHoursworkInfo" parameterClass="customerVerifyHoursInfo">
+	 	INSERT INTO CUSTOMER_VERIFY_HOURS_INFO(
+	 	EMPLOYEENAME,EMPLOYEEID,RESOURCESTYPE,PROJECTNAME,PROJECTID,PROJECTOFDEPARTMENT,PRODUCTNAME,SERVICEPRODUCTSATTRIBUTIVETEAM,
+	 	SERVICEPRODUCTSDEPARTMENT,PROVIDERS,TECHNOLOGYPLATFORM,PRESENCEOFTYPE,WORKPLACE,TECHNOLOGYGRADE,WORKDATE,NORMALWORKINGHOURS,
+	 	OVERTIMEHOURS,ISBILLING)
+	 	VALUES(
+	 	#employeeName#,#employeeId#,#resourcesType#,#projectName#,#projectId#,#projectOfDepartment#,#productName#,
+	 	#serviceProductsAttributiveTeam#,#serviceProductsDepartment#,#providers#,#technologyPlatform#,#presenceOfType#,#workPlace#,
+	 	#technologyGrade#,#workDate#,#normalWorkingHours#,#overTimeHours#,#isBilling#)
+	 </insert>
+	 <update id="modifyCstmHoursworkInfo" parameterClass="customerVerifyHoursInfo">
+	 	UPDATE CUSTOMER_VERIFY_HOURS_INFO SET 
+	 	NORMALWORKINGHOURS=NORMALWORKINGHOURS+#normalWorkingHours#,OVERTIMEHOURS=OVERTIMEHOURS+#overTimeHours#
+	 	WHERE EMPLOYEEID=#employeeId# AND WORKDATE=#workDate#
+	 </update>
+	 
+	 <select id="queryGradeAndTec" parameterClass="java.lang.String" resultClass="customerVerifyHoursInfo">
+	 	SELECT * FROM (
+	 	SELECT DISTINCT TECHNOLOGYPLATFORM,TECHNOLOGYGRADE,WORKDATE FROM CUSTOMER_VERIFY_HOURS_INFO 
+	 	WHERE EMPLOYEEID=#employeeId# and TECHNOLOGYGRADE is not null and TECHNOLOGYPLATFORM is not null ORDER BY WORKDATE DESC) WHERE ROWNUM=1
+	 </select>
+	 
+	 <select id="queryCusHoursInfo" parameterClass="customerVerifyHoursInfo" resultClass="customerVerifyHoursInfo">
+	 	select * from CUSTOMER_VERIFY_HOURS_INFO where EMPLOYEENAME=#employeeName# and WORKDATE=#workDate#
+	 </select>
+	 <select id="queryCusHoursInfoBySEdate" parameterClass="customerVerifyHoursInfo" resultClass="customerVerifyHoursInfo">
+	 	SELECT * FROM CUSTOMER_VERIFY_HOURS_INFO T WHERE T.WORKDATE BETWEEN #startDate# AND #endDate#
+	 </select>
+	 <delete id="delCusHoursInfo" parameterClass="customerVerifyHoursInfo">
+	 	delete from CUSTOMER_VERIFY_HOURS_INFO where EMPLOYEENAME=#employeeName# and WORKDATE=#workDate#
+	 </delete>
+	 
+	 <!-- 查询最后一次客户确认工时导入的工作日期 -->
+	 <select id="queryLastDate4cusVer" resultClass="java.util.Date">
+	 	SELECT WORKDATE FROM (SELECT DISTINCT WORKDATE FROM CUSTOMER_VERIFY_HOURS_INFO
+	 	WHERE WORKDATE IS NOT NULL  ORDER BY WORKDATE DESC )WHERE ROWNUM=1
+	 </select>
+	 
+<!-- 客户确认工时信息  结束 -->
+
+
+<!-- 工时统计表  开始 -->
+	 <!-- 添加工时统计信息 -->
+	  <insert id="addHoursStatisticsInfo" parameterClass="employeeBasicInfo">
+		insert into EMPLOYEE_HOURS_STATISTICS_INFO 
+		(EMPLOYEEID,EMPLOYEENAME)
+		values(#employeeId#,#employeeName#)
+	  </insert>
+	 <!-- 查询员工工时统计by员工Id -->
+	 <select id="queryHoursStatistics" parameterClass="java.lang.String" resultClass="hoursWorkStatisticsInfo">
+	 	select * from employee_hours_statistics_info t where t.EMPLOYEEID=#employeeId#
+	 </select>
+	 <!-- 更新员工剩余倒休总工时 -->
+	 <update id="modifyLastHours" parameterClass="HoursWorkStatisticsInfo">
+	 	update employee_hours_statistics_info set LASTSWOPPEDTOTALHOURS=LASTSWOPPEDTOTALHOURS-#hours2udtLast# where EMPLOYEEID=#employeeId#
+	 </update>
+	 <update id="modifyHoursStatistics"  parameterClass="HoursWorkStatisticsInfo">
+	 	update employee_hours_statistics_info set 
+	 	STANDARDTOTALHOURS=#standardTotalHours#,CUSTOMERSURETOTALHOURS=#customerSureTotalHours#,PSAWELFAREHOLIAYSTOTALHOURS=#psaWelfareHoliaysTotalHours#,
+	 	PSANOTWELFAREHOLIAYSTOTALHOURS=#psaNotWelfareHoliaysTotalHours#,
+	 	LASTSWOPPEDTOTALHOURS=#lastSwoppedTotalHours#,
+	 	WORKOTIMEAHUGHTOTALHOURS=#workOtimeAhughTotalHours#,
+	 	WORKOTIMESUBSIDIESTOTALHOURS=#workOtimeSubsidiesTotalHours#,BYTHESTATISTICALDATE=#byTheStatisticalDate#
+	 	where EMPLOYEEID=#employeeId#
+	 </update>
+	 
+	 <delete id="delHoursStatisticsInfo" parameterClass="java.lang.String" >
+	 	delete from employee_hours_statistics_info t where t.EMPLOYEEID=#employeeId#
+	 </delete>
+	 
+	 <select id="queryLastDate4sta" resultClass="java.util.Date">
+	 	SELECT BYTHESTATISTICALDATE FROM (SELECT DISTINCT BYTHESTATISTICALDATE FROM EMPLOYEE_HOURS_STATISTICS_INFO
+	 	 WHERE BYTHESTATISTICALDATE IS NOT NULL  ORDER BY BYTHESTATISTICALDATE DESC )WHERE ROWNUM=1
+	 </select>
+	 
+<!-- 工时统计表  结束 -->
+
+<!-- 工时详情表  开始 	-->
+	<insert id="addHoursDetailInfo" parameterClass="hoursDetailInfo">
+		insert into employee_hours_detail_info 
+		(EMPLOYEEID,EMPLOYEENAME,STANDARDDATETYPE,STANDARDDATE,STANDARDHOURS,CURRENTGAPHOURS,STANDARDWEEK)
+		values(#employeeId#,#employeeName#,#standardDateType#,#standardDate#,#standardHours#,#standardHours#,#standardWeek#)
+	</insert>
+	<select id="queryHoursDetail" parameterClass="hoursDetailInfo" resultClass="hoursDetailInfo">
+	 	select * from employee_hours_detail_info t where t.EMPLOYEEID=#employeeId# and t.STANDARDDATE=#standardDate#
+	 </select>
+	 <select id="queryAllDates" resultClass="java.util.Date">
+	 	SELECT DISTINCT T.STANDARDDATE FROM EMPLOYEE_HOURS_DETAIL_INFO T
+	 </select>
+	 <delete id="delHoursDetailInfo" parameterClass="hoursDetailInfo" >
+	 	delete from employee_hours_detail_info t where t.EMPLOYEEID=#employeeId#
+	 	<isNotEmpty prepend="AND" property="standardDate">
+	 		t.STANDARDDATE=#standardDate#
+	 	</isNotEmpty>
+	 </delete>
+	 <!-- 客户确认工时导入导致的更新 -->
+	 <update id="modifyHoursDetailInfo" parameterClass="hoursDetailInfo">
+		 UPDATE EMPLOYEE_HOURS_DETAIL_INFO SET
+		 CUSTOMERVERIFYHOURS=#customerVerifyHours#,CUSTOMERVERIFYOVERTIMEHOURS=#customerVerifyOvertimeHours#,PSALEAVEHOURS=#psaLeaveHours#,
+		 PSALEAVEHOURSTYPE=#psaLeaveHoursType#,CURRENTAHUGHHOURS=#currentAhughHours#,CURRENTSUBSIDIESHOURS=#currentSubsidiesHours#,
+		 CURRENTGAPHOURS=#currentGapHours#,PROJECTNAME=#projectName#,WORKPLACE=#workPlace#,TECHNOLOGYPLATFORM=#technologyPlatform#,
+		 PRESENCEOFTYPE=#presenceOfType#,TECHNOLOGYGRADE=#technologyGrade#,STANDARDHOURS=#standardHours#,STANDARDDATETYPE=#standardDateType#,
+		 EMPNAME4CUS=#empName4Cus#,RESOURCESTYPE=#resourcesType#,PROJECTID=#projectId#,PROJECTOFDEPARTMENT=#projectOfDepartment#,
+		 PRODUCTNAME=#productName#,SERVICEPRODUCTSATTRIBUTIVETEAM=#serviceProductsAttributiveTeam#,
+		 SERVICEPRODUCTSDEPARTMENT=#serviceProductsDepartment#,PROVIDERS=#providers#,NORMALWORKINGHOURS=#normalWorkingHours#,
+		 OVERTIMEHOURS=#overTimeHours#
+		 WHERE EMPLOYEEID=#employeeId# AND STANDARDDATE = #standardDate#
+	 </update>
+	 <!-- 一次导入出现多条同一人同一天的数据 从第二条开始与表中数据合并(累加,只操作与工时相关的数据) -->
+	 <update id="modifyHoursDetailInfoRepeat" parameterClass="hoursDetailInfo">
+		 UPDATE EMPLOYEE_HOURS_DETAIL_INFO SET
+		 CUSTOMERVERIFYHOURS=CUSTOMERVERIFYHOURS+#customerVerifyHours#,CUSTOMERVERIFYOVERTIMEHOURS=CUSTOMERVERIFYOVERTIMEHOURS+#customerVerifyOvertimeHours#,
+		 CURRENTAHUGHHOURS=CURRENTAHUGHHOURS+#currentAhughHours#,CURRENTSUBSIDIESHOURS=CURRENTSUBSIDIESHOURS+#currentSubsidiesHours#,
+		 NORMALWORKINGHOURS=NORMALWORKINGHOURS+#normalWorkingHours#,OVERTIMEHOURS=OVERTIMEHOURS+#overTimeHours#,
+		 CURRENTGAPHOURS=CURRENTGAPHOURS-#customerVerifyHours#
+		 WHERE EMPLOYEEID=#employeeId# AND STANDARDDATE = #standardDate#
+	 </update>
+	 <!-- 员工状态改为'离职'后 删除离职生效日期之后的预置(每人预置365条数据)信息 -->
+	 <delete id="delHoursDetailInfo4dim" parameterClass="hoursDetailInfo">
+	 	delete from employee_hours_detail_info t where t.EMPLOYEEID=#employeeId# AND t.STANDARDDATE&gt;=#standardDate#
+	 </delete>
+	 <select id="queryWorkPlaces" resultClass="java.lang.String">
+	 	SELECT DISTINCT WORKPLACE FROM EMPLOYEE_HOURS_DETAIL_INFO
+	 </select>
+	 <!-- 查询员工加班工时总数 -->
+	 <select id="queryOverTimeHours" parameterClass="hoursDetailInfo" resultClass="hoursDetailInfo">
+	 	select EMPLOYEEID,EMPLOYEENAME,WORKPLACE,hoursOtSum from (
+	 	select t.employeeid,t.employeename,t.workplace,sum(t.currentsubsidieshours) as hoursOtSum 
+	 	from employee_hours_detail_info t where t.employeeid in (
+		select distinct h.employeeid from customer_verify_hours_info h 
+		where h.workdate between #startDate# and #endDate#
+		) 
+		and t.standarddate between #startDate# and #endDate#
+		<isNotEmpty prepend="AND"  property="employeeId" >
+	 		(t.employeeid=#employeeId# or t.employeename=#employeeId#)
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="workPlace" >
+	 		 t.workplace=#workPlace#
+	 	</isNotEmpty>
+	 	and t.workplace is not null
+		group by  t.employeeid,t.employeename,t.workplace order by t.employeename)
+		<dynamic prepend="where" >
+			<isEqual prepend="AND"  property="flag" compareValue="real">
+	 			hoursOtSum > 0
+			</isEqual>
+		</dynamic>
+	 </select>
+	 <!-- 查询某员工差异工时 -->
+	 <select id="queryGapHoursById" parameterClass="java.util.Map" resultClass="java.lang.Float">
+	 	SELECT T.CURRENTGAPHOURS FROM EMPLOYEE_HOURS_DETAIL_INFO T
+	 	<dynamic prepend="WHERE">
+	 		<isNotEmpty prepend="AND" property="employeeId">
+	 			T.EMPLOYEEID=#employeeId#
+	 		 </isNotEmpty>
+	 		 <isNotEmpty prepend="AND" property="standardDate">
+	 			T.STANDARDDATE=#standardDate#
+	 		 </isNotEmpty>
+	 	</dynamic>
+	 </select>
+	 <update id="modifyGapByPsa" parameterClass="hoursDetailInfo">
+	 	UPDATE EMPLOYEE_HOURS_DETAIL_INFO T SET
+	 	T.PSALEAVEHOURS=#psaLeaveHours#,T.PSALEAVEHOURSTYPE=#psaLeaveHoursType#,T.CURRENTGAPHOURS=#currentGapHours#
+	 	WHERE T.EMPLOYEEID=#employeeId# AND T.STANDARDDATE=#standardDate#
+	 	AND T.CURRENTGAPHOURS=T.STANDARDHOURS
+	 </update>
+	 <!-- 查询各技术平台各等级时间区间内的工时总数 -->
+	 <select id="queryHoursByTecAndGrade" resultClass="cusIncomeQueryInfo" parameterClass="cusIncomeQueryInfo">
+	 	SELECT T.TECHNOLOGYPLATFORM AS TEC,T.TECHNOLOGYGRADE AS GRADE,SUM(T.NORMALWORKINGHOURS+T.CURRENTSUBSIDIESHOURS) AS TOTALHOURS 
+	 	 FROM EMPLOYEE_HOURS_DETAIL_INFO T WHERE T.STANDARDDATE BETWEEN #sDate# AND #eDate#
+		AND T.TECHNOLOGYPLATFORM IS NOT NULL GROUP BY T.TECHNOLOGYPLATFORM,T.TECHNOLOGYGRADE
+	 </select>
+<!-- 工时详情表  结束 	-->
+</sqlMap>

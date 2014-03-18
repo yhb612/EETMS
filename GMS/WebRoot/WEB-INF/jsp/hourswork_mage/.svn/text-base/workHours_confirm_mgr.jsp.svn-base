@@ -1,0 +1,70 @@
+<%@ page language="java" pageEncoding="utf-8"%>
+
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html:html lang="true">
+  <head>
+    <html:base />
+    
+    <title>客户确认工时管理</title>
+
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<!--
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	-->
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/content.css">
+  </head>
+<body class="bod">
+<html:form action="imp.do?method=impInfo" method="post" enctype="multipart/form-data">
+	<div>
+	  	<table cellSpacing=0 cellPadding=0 height="100%" >
+	      <tr 
+	  			style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg_header.gif); BACKGROUND-REPEAT: repeat-x; " 
+	  			height=47>
+	        <td width=10><span 
+	     		 style="FLOAT: left; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_hl.gif); WIDTH: 15px; BACKGROUND-REPEAT: no-repeat; HEIGHT: 47px"></span></td>
+	        <td><span 
+	      		style="FLOAT: left; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_hl2.gif); WIDTH: 15px; BACKGROUND-REPEAT: no-repeat; HEIGHT: 47px"></span><span 
+	      		style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FLOAT: left; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_hb.gif); PADDING-BOTTOM: 10px; COLOR: white; PADDING-TOP: 10px; BACKGROUND-REPEAT: repeat-x; HEIGHT: 47px; TEXT-ALIGN: center; 0px: ">客户确认工时管理</span><span 
+	      		style="FLOAT: left; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_hr.gif); WIDTH: 60px; BACKGROUND-REPEAT: no-repeat; HEIGHT: 47px"></span></td>
+	        <td 
+	   		 style="BACKGROUND-POSITION: 50% bottom; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_rc.gif)" 
+	    		width=10></td>
+	      </tr>
+	      <tr>
+	        <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_ls.gif)">&nbsp;</td>
+	        <td  style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; COLOR: #566984; PADDING-TOP: 10px; BACKGROUND-COLOR: white;width: 10px" vAlign=top align=left>
+				 <div style="width:900px">
+				 		<font style="color:#364c6d;  line-height: 12px; border-bottom: #bad6ec 1px solid; text-align: left" >客户确认工时数据 :</font>
+	  				<html:file property="file" style="color:#364c6d;  line-height: 12px; border-bottom: #bad6ec 1px solid; text-align: left"/>&nbsp;&nbsp;&nbsp;<html:submit property="ttt"  value="导入" styleClass="cmdField"/>
+				 </div>
+				 <div style="color: black;width:900px;">
+				 	<c:if test="${impCount!=null}">
+				 		本次导入成功<c:out value="${impCount}"/>条数据<br/><br/>
+				 	</c:if>
+				 	<c:if test="${errorNames!=null}">
+				 		<span style="color:red;">以下员工导入异常，请确认员工姓名与员工基本信息中的客户定义姓名保持一致！</span><br/>
+				 		<c:out value="${errorNames}"/>
+				 	</c:if>
+				 </div>
+	        </td>
+	        <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_rs.gif)"></td>
+	      </tr>
+	      
+	      <tr style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_fs.gif); BACKGROUND-REPEAT: repeat-x" height=10>
+	        <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_lf.gif)"></td>
+	        <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_fs.gif)"></td>
+	        <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_rf.gif)"></td>
+	      </TR>
+	      <html:hidden property="flag" value="cci"/>
+	  </table>
+  </div>
+  </html:form>
+</body>
+</html:html>

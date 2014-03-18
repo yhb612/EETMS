@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" > 
+<sqlMap namespace="security">
+	 <typeAlias alias="userss" type="com.iss.gms.entity.security.Userss"/>
+	 <typeAlias alias="sysMenu" type="com.iss.gms.entity.security.SysMenu"/>
+	 
+	 
+	 <select id="getUser" parameterClass="userss" resultClass="userss" >
+	 	select * from USERSS where LOGINID = #loginId# AND PASSWORD = #password#
+	 </select>
+	 
+	  <select id="getAllMenu"  parameterClass="java.lang.String" resultClass="sysMenu" >
+	 	select * from SYSMENU 
+	 </select>
+	 
+</sqlMap>

@@ -1,0 +1,10 @@
+#datebase
+con.driverClassName=oracle.jdbc.driver.OracleDriver
+con.url=jdbc:oracle:thin:@10.16.82.48:1521/gap
+con.username=gapuser
+con.password=gapuser
+#GAP工时导出路径
+gap.exportpath=C\:\\Users\\Administrator\\Desktop\\testexp\\中行工时核实.xls
+
+#报销费用(每人)
+cost.expenses=50

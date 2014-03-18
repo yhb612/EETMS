@@ -1,0 +1,73 @@
+package com.iss.gms.web.action.emp;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.validator.LazyValidatorForm;
+
+import com.iss.gms.entity.CustomerQuoteInfo;
+import com.iss.gms.service.IEmployeeService;
+
+public class CustomerQuoteInfoAction extends DispatchAction {
+
+	private static final Log log = LogFactory.getLog(EmployeeBasicInfoAction.class);
+	private IEmployeeService employeeService;
+
+	public void setEmployeeService(IEmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		try{
+			CustomerQuoteInfo cqi = new CustomerQuoteInfo();
+			cqi = employeeService.queryCstmQuoteInfo();
+			if(cqi!=null){
+				request.setAttribute("cqi",cqi);
+			}else{
+				CustomerQuoteInfo cqi1 = new CustomerQuoteInfo();
+				employeeService.addCstmQuoteInfo(cqi1);
+				request.setAttribute("cqi",cqi1);
+			}
+			return mapping.findForward("success");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			return mapping.findForward("error");
+		}
+	}
+	
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		try{
+			LazyValidatorForm lzform = (LazyValidatorForm)form;
+			CustomerQuoteInfo cqi = new CustomerQuoteInfo();
+			cqi.setPrice4ST(Float.parseFloat((String)lzform.get("price4ST")));
+			cqi.setOvertimePrice4ST(Float.parseFloat((String)lzform.get("overtimePrice4ST")));
+			cqi.setPrice4MT(Float.parseFloat((String)lzform.get("price4MT")));
+			cqi.setOvertimePrice4MT(Float.parseFloat((String)lzform.get("overtimePrice4MT")));
+			cqi.setPrice4JT(Float.parseFloat((String)lzform.get("price4JT")));
+			cqi.setOvertimePrice4JT(Float.parseFloat((String)lzform.get("overtimePrice4JT")));
+			cqi.setPrice4SD(Float.parseFloat((String)lzform.get("price4SD")));
+			cqi.setOvertimePrice4SD(Float.parseFloat((String)lzform.get("overtimePrice4SD")));
+			cqi.setPrice4MD(Float.parseFloat((String)lzform.get("price4MD")));
+			cqi.setOvertimePrice4MD(Float.parseFloat((String)lzform.get("overtimePrice4MD")));
+			cqi.setPrice4JD(Float.parseFloat((String)lzform.get("price4JD")));
+			cqi.setOvertimePrice4JD(Float.parseFloat((String)lzform.get("overtimePrice4JD")));
+			employeeService.modifyCstmQuoteInfo(cqi);
+			return search(mapping,form,request,response);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			return mapping.findForward("error");
+		}
+	}
+}

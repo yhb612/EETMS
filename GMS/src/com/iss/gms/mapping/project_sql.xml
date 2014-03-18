@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >     
+    
+<sqlMap namespace="project">
+	 <typeAlias alias="projectInfo" type="com.iss.gms.entity.ProjectInfo"/>
+		
+	 <select id="queryProInfoByName" parameterClass="java.lang.String" resultClass="projectInfo" >
+	 	select * from project_info where 1=1
+	 	<isNotEmpty prepend="AND">
+	 	PRONAME=#pname# or PROID=#pname#
+	 	</isNotEmpty>
+	 	ORDER BY PROID
+	 </select>
+	 <select id="queryProInfoLike" parameterClass="projectInfo" resultClass="projectInfo" >
+	 	select * from project_info
+	 	<dynamic prepend="where">
+		 	<isNotEmpty prepend="AND" property="proId">
+		 	(PRONAME like #proId# or PROID like #proId#)
+		 	</isNotEmpty>
+		 	<isNotEmpty prepend="AND" property="projectManager">
+		 	PROJECTMANAGER = #projectManager#
+		 	</isNotEmpty>
+		 	<isNotEmpty prepend="AND" property="implementDepartment">
+		 	IMPLEMENTDEPARTMENT = #implementDepartment# 
+		 	</isNotEmpty>
+	 	</dynamic>
+	 	ORDER BY PRONAME
+	 </select>
+	 <select id="queryProInfoById" parameterClass="java.lang.String" resultClass="projectInfo" >
+	 	select * from project_info where PROID=#proId#
+	 </select>
+	 
+	 <insert id="addProjectInfo" parameterClass="projectInfo">
+	
+		insert into project_info (
+				PROID,PRONAME,CAREERDEPARTMENT,IMPLEMENTDEPARTMENT,
+				PROJECTMANAGER,CUSTOMERNAME,BEGINDATE,ENDDATE) 
+		values(
+				#proId#, #proName#, #careerdepartment#, #implementDepartment#,
+				#projectManager#,#customerName#,#beginDate#,#endDate#)
+	</insert>
+	
+	<update id="modifyProjectInfo" parameterClass="projectInfo">
+		update project_info 
+		set 	PRONAME=#proName#,CAREERDEPARTMENT=#careerdepartment#,
+				IMPLEMENTDEPARTMENT=#implementDepartment#,
+				PROJECTMANAGER=#projectManager#,CUSTOMERNAME=#customerName#,
+				BEGINDATE=#beginDate#,ENDDATE=#endDate#
+		where PROID=#proId#
+	</update>
+	
+	<delete id="removeProjectInfo" parameterClass="java.lang.String">
+			delete from project_info where PROID=#pid# 
+	</delete>
+	
+	<!-- 查询在某月范围内的项目 -->
+	<select id="queryProByMonth" parameterClass="java.util.Map" resultClass="projectInfo">
+		SELECT * FROM PROJECT_INFO WHERE BEGINDATE &lt;= #lastDateOfMonth# and ENDDATE &gt;= #firstDateOfMonth#
+	</select>
+	
+	<!-- 查询所有项目经理 -->
+	<select id="queryProMgrs" resultClass="java.lang.String">
+		SELECT DISTINCT T.PROJECTMANAGER FROM PROJECT_INFO T WHERE T.PROJECTMANAGER IS NOT NULL
+	</select>
+	<!-- 查询所有实施部 -->
+	<select id="querydpts4pro" resultClass="java.lang.String">
+		SELECT DISTINCT T.IMPLEMENTDEPARTMENT FROM PROJECT_INFO T WHERE T.IMPLEMENTDEPARTMENT IS NOT NULL ORDER BY  T.IMPLEMENTDEPARTMENT
+	</select>
+</sqlMap>

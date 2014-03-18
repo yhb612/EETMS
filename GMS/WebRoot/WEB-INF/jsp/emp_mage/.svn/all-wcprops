@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/GMS_repository/!svn/ver/68/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage
+END
+emp_dimission_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/GMS_repository/!svn/ver/53/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/emp_dimission_mgr.jsp
+END
+addEmpInfo.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/GMS_repository/!svn/ver/82/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/addEmpInfo.jsp
+END
+role_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/role_mgr.jsp
+END
+cstm_quote_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/cstm_quote_mgr.jsp
+END
+addEmpRelInfo.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/GMS_repository/!svn/ver/75/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/addEmpRelInfo.jsp
+END
+emp_vacation_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/GMS_repository/!svn/ver/53/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/emp_vacation_mgr.jsp
+END
+emp_belong_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/GMS_repository/!svn/ver/77/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/emp_belong_mgr.jsp
+END
+employeeMsgMgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/GMS_repository/!svn/ver/24/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/employeeMsgMgr.jsp
+END
+impData.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/impData.jsp
+END
+updateEmpInfo.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/GMS_repository/!svn/ver/75/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/updateEmpInfo.jsp
+END
+updateEmpRelInfo.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/GMS_repository/!svn/ver/82/trunk/GMS/WebRoot/WEB-INF/jsp/emp_mage/updateEmpRelInfo.jsp
+END

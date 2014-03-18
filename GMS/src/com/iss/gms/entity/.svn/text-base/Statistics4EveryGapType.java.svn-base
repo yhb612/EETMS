@@ -1,0 +1,85 @@
+package com.iss.gms.entity;
+
+public class Statistics4EveryGapType {
+	//迟到早退总工时
+	private float status0Hours;
+	//现场储备工时
+	private float status1Hours;
+	//回公司开会（培训）工时
+	private float status2Hours;
+	//离场工时
+	private float status3Hours;
+	//公司储备工时
+	private float status4Hours;
+	//员工打卡异常冲倒休工时
+	private float status5Hours;
+	//闲置工时
+	private float status6Hours;
+	//正常倒休工时
+	private float status7Hours;
+	//差异类型
+	private String gapType;
+	//核销总时间
+	private float count4Type;
+	public float getCount4Type() {
+		return count4Type;
+	}
+	public void setCount4Type(float count4Type) {
+		this.count4Type = count4Type;
+	}
+	public String getGapType() {
+		return gapType;
+	}
+	public void setGapType(String gapType) {
+		this.gapType = gapType;
+	}
+	public float getStatus0Hours() {
+		return status0Hours;
+	}
+	public void setStatus0Hours(float status0Hours) {
+		this.status0Hours = status0Hours;
+	}
+	public float getStatus1Hours() {
+		return status1Hours;
+	}
+	public void setStatus1Hours(float status1Hours) {
+		this.status1Hours = status1Hours;
+	}
+	public float getStatus2Hours() {
+		return status2Hours;
+	}
+	public void setStatus2Hours(float status2Hours) {
+		this.status2Hours = status2Hours;
+	}
+	public float getStatus3Hours() {
+		return status3Hours;
+	}
+	public void setStatus3Hours(float status3Hours) {
+		this.status3Hours = status3Hours;
+	}
+	public float getStatus4Hours() {
+		return status4Hours;
+	}
+	public void setStatus4Hours(float status4Hours) {
+		this.status4Hours = status4Hours;
+	}
+	public float getStatus5Hours() {
+		return status5Hours;
+	}
+	public void setStatus5Hours(float status5Hours) {
+		this.status5Hours = status5Hours;
+	}
+	public float getStatus6Hours() {
+		return status6Hours;
+	}
+	public void setStatus6Hours(float status6Hours) {
+		this.status6Hours = status6Hours;
+	}
+	public float getStatus7Hours() {
+		return status7Hours;
+	}
+	public void setStatus7Hours(float status7Hours) {
+		this.status7Hours = status7Hours;
+	}
+	
+}

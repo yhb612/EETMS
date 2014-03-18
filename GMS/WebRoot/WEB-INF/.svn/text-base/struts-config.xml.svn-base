@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+  <form-beans>
+  		<form-bean name="basicForm" type="org.apache.struts.validator.LazyValidatorForm"/>
+    	<form-bean name="loadForm" type="com.iss.gms.form.LoadForm" />
+  </form-beans>
+  
+  <global-exceptions />
+  <global-forwards >
+  	<forward name="error" path="/error.jsp"/>
+  </global-forwards>
+  
+  <action-mappings >
+    <action
+      path="/user"
+      parameter="method"
+      type="com.iss.gms.web.action.UserAction"
+      input="error"
+      cancellable="true"
+      validate="false">
+      		<forward name="success"  path="/success.jsp"/>
+      </action>
+    <action
+      path="/toIndex"
+      type="com.iss.gms.web.action.TilesTestAction"
+      parameter="method"
+      input="error"
+      validate="false">
+      		<forward name="success"  path="indexLayout"/>
+	</action>
+	
+    <action
+      name="basicForm"
+      parameter="method"
+      path="/empbi"
+      type="com.iss.gms.web.action.emp.EmployeeBasicInfoAction"
+      validate="false"
+      input="error"
+      cancellable="true" >
+      		<forward name="success"  path="empLayout"/>
+      		<forward name="success1"  path="/WEB-INF/jsp/emp_mage/addEmpInfo.jsp"/>
+      		<forward name="success2"  path="/WEB-INF/jsp/emp_mage/updateEmpInfo.jsp"/>
+      		<forward name="success3"  path="/WEB-INF/jsp/emp_mage/impData.jsp"/>
+      </action>
+      
+      <action
+      name="basicForm"
+      parameter="method"
+      path="/empri"
+      type="com.iss.gms.web.action.emp.EmployeeRelegationInfoAction"
+      validate="false"
+      input="error"
+      cancellable="true" >
+      		<forward name="success"  path="empRelegation"/>
+      		<forward name="success1"  path="/WEB-INF/jsp/emp_mage/addEmpRelInfo.jsp"/>
+      		<forward name="success2"  path="/WEB-INF/jsp/emp_mage/updateEmpRelInfo.jsp"/>
+      		<forward name="success3"  path="/WEB-INF/jsp/emp_mage/impData.jsp"/>
+      </action>
+      <action
+      name="basicForm"
+      parameter="method"
+      path="/empvi"
+      type="com.iss.gms.web.action.emp.EmployeeVacationInfoAction"
+      validate="false"
+      input="error"
+      cancellable="true" >
+      		<forward name="success"  path="empVacation"/>
+      		<forward name="success1"  path="/WEB-INF/jsp/emp_mage/impData.jsp"/>
+      </action>
+      <action
+      name="basicForm"
+      parameter="method"
+      path="/empdi"
+      type="com.iss.gms.web.action.emp.EmployeeDimissionInfoAction"
+      validate="false"
+      input="error"
+      cancellable="true" >
+      		<forward name="success"  path="empDimission"/>
+      		<forward name="success1"  path="empDimission"/>
+      </action>
+      <action
+      name="basicForm"
+      parameter="method"
+      path="/hoursworkStd"
+      type="com.iss.gms.web.action.hourswork.HoursworkStandardAction"
+      validate="false"
+      input="error"
+      cancellable="true" >
+      		<forward name="success"  path="hwStandard"/>
+      </action>
+    <action
+      attribute="loadForm"
+      name="loadForm"
+      parameter="method"
+      path="/imp"
+      type="com.iss.gms.web.action.ImportDataAction"
+      validate="false"
+      input="error"
+      cancellable="true" >
+      	<forward name="success"  path="/WEB-INF/jsp/emp_mage/impData.jsp"/>
+      	<forward name="success1"  path="indexLayout"/>
+      	<forward name="toCstmHw"  path="customertLayout"/>
+      </action>
+    <action
+      name="basicForm"	
+      parameter="method"
+      path="/proj"
+      type="com.iss.gms.web.action.pro.ProjAction"
+      validate="false"
+      input="error"
+      cancellable="true">
+      		<forward name="success"  path="projLayout"/>
+      		<forward name="success1"  path="/WEB-INF/jsp/pro_mage/addProInfo.jsp"/>
+      		<forward name="success2"  path="/WEB-INF/jsp/pro_mage/updateProInfo.jsp"/>
+      </action>
+    <action
+      name="basicForm"
+      parameter="method"
+      path="/gapch"
+      type="com.iss.gms.web.action.hourswork.GapCheckAction"
+      cancellable="true" 
+      validate="false"
+      input="error">
+      		<forward name="success"  path="gapchLayout"/>
+      </action>
+    <action
+      attribute="loadForm"
+      name="loadForm"
+      parameter="method"
+      path="/customer"
+      type="com.iss.gms.web.action.hourswork.CustomeerHourAction"
+      cancellable="true" 
+       validate="false"
+      input="error">
+      		<forward name="success"  path="customertLayout"/>
+      </action>
+      <action
+      attribute="basicForm"
+      name="basicForm"
+      parameter="method"
+      path="/cstmPri"
+      type="com.iss.gms.web.action.emp.CustomerQuoteInfoAction"
+      cancellable="true" 
+       validate="false"
+      input="error">
+      		<forward name="success"  path="customerPrice"/>
+      </action>
+      <action
+      attribute="basicForm"
+      name="basicForm"
+      parameter="method"
+      path="/wt4chk"
+      type="com.iss.gms.web.action.syssrch.WtDetail4CheckAction"
+      cancellable="true" 
+       validate="false"
+      input="error">
+      		<forward name="success"  path="worktime4chk"/>
+      </action>
+      <action
+      attribute="basicForm"
+      name="basicForm"
+      parameter="method"
+      path="/costPre"
+      type="com.iss.gms.web.action.cost.Prediction4CostAction"
+      cancellable="true" 
+       validate="false"
+      input="error">
+      		<forward name="success"  path="costPre"/>
+      		<forward name="detail"  path="/WEB-INF/jsp/sys_srch/income_cost_prediction_detail.jsp"/>
+      </action>
+  </action-mappings>
+
+  <!-- 使spring来管理Struts 类DelegatingRequestProcessor-->
+  <controller processorClass="org.springframework.web.struts.DelegatingTilesRequestProcessor"/>
+<!--  <message-resources parameter="com.yourcompany.struts.ApplicationResources" />-->
+  <message-resources parameter="  "/>
+  <!-- 启用tiles框架--> 
+  <plug-in className="org.apache.struts.tiles.TilesPlugin" >
+		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+		<set-property property="moduleAware" value="true" />
+  </plug-in>
+ 
+  
+</struts-config>
+
+

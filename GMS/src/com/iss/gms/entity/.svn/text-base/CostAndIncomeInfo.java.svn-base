@@ -1,0 +1,79 @@
+package com.iss.gms.entity;
+
+public class CostAndIncomeInfo {
+	//预测年月	
+	private String yearAndMonth;
+	//部门
+	private String department;
+	//项目经理
+	private String projectManager;
+	//项目编号
+	private String proId;
+	//项目名称
+	private String projectName;
+	//计费人数
+	private String billingNumbers;
+	//预测收入(高级x22天(入职计费时间开始算))x250报价)
+	private String predictionIncome;
+	//预测成本(合同工资+社保x1月份)
+	private String predictionCost;
+	//预测报销(每人多少钱(工程属性文件配置))
+	private String predictionExpenses;
+	public String getYearAndMonth() {
+		return yearAndMonth;
+	}
+	public void setYearAndMonth(String yearAndMonth) {
+		this.yearAndMonth = yearAndMonth;
+	}
+	public String getDepartment() {
+		return department;
+	}
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+	public String getProjectManager() {
+		return projectManager;
+	}
+	public void setProjectManager(String projectManager) {
+		this.projectManager = projectManager;
+	}
+	public String getProId() {
+		return proId;
+	}
+	public void setProId(String proId) {
+		this.proId = proId;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getBillingNumbers() {
+		return billingNumbers;
+	}
+	public void setBillingNumbers(String billingNumbers) {
+		this.billingNumbers = billingNumbers;
+	}
+	public String getPredictionIncome() {
+		return predictionIncome;
+	}
+	public void setPredictionIncome(String predictionIncome) {
+		this.predictionIncome = predictionIncome;
+	}
+	public String getPredictionCost() {
+		return predictionCost;
+	}
+	public void setPredictionCost(String predictionCost) {
+		this.predictionCost = predictionCost;
+	}
+	public String getPredictionExpenses() {
+		return predictionExpenses;
+	}
+	public void setPredictionExpenses(String predictionExpenses) {
+		this.predictionExpenses = predictionExpenses;
+	}
+	
+	
+
+}

@@ -1,0 +1,701 @@
+package com.iss.gms.web.action;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.upload.FormFile;
+
+import com.iss.gms.entity.CustomerVerifyHoursInfo;
+import com.iss.gms.entity.EmployeeBasicInfo;
+import com.iss.gms.entity.EmployeeDimissionInfo;
+import com.iss.gms.entity.EmployeeHoursDetailInfo;
+import com.iss.gms.entity.EmployeeRelegationInfo;
+import com.iss.gms.entity.EmployeeVacationInfo;
+import com.iss.gms.entity.HoursWorkStandardInfo;
+import com.iss.gms.entity.HoursWorkStatisticsInfo;
+import com.iss.gms.entity.ProjectInfo;
+import com.iss.gms.form.LoadForm;
+import com.iss.gms.service.HoursWorkService;
+import com.iss.gms.service.IEmployeeService;
+import com.iss.gms.service.IProjectService;
+import com.iss.gms.utils.GmsUtils;
+
+public class ImportDataAction extends DispatchAction {
+	// 员工service
+	private IEmployeeService employeeService;
+	// 项目service
+	private IProjectService projectService;
+	// 工时service
+	private HoursWorkService hoursWorkService;
+
+	public void setHoursWorkService(HoursWorkService hoursWorkService) {
+		this.hoursWorkService = hoursWorkService;
+	}
+
+	public void setProjectService(IProjectService projectService) {
+		this.projectService = projectService;
+	}
+
+	public void setEmployeeService(IEmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
+
+	// 公用跳转到导入页面
+	public ActionForward toImp(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+			request.setAttribute("status", request.getParameter("status"));
+			return mapping.findForward("success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return mapping.findForward("error");
+		}
+	}
+
+	// 公用导入数据方法（根据flag区分调用此方法的页面，以构建对应实体）
+	public ActionForward impInfo(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LoadForm uploadForm = (LoadForm) form;
+		FormFile file = uploadForm.getFile();
+		if (file == null) {
+			return mapping.findForward("success");
+		}
+
+		String filename = file.getFileName();
+		String excelVersion = "";
+		if (filename.endsWith(".xls"))
+			excelVersion = "2003";
+		else if (filename.endsWith(".xlsx"))
+			excelVersion = "2007";
+		else {
+			request.setAttribute("err_msg", "文件类型错误,请重新操作!");
+			return mapping.findForward("error");
+		}
+		uploadForm.setFilename(filename);
+		String size = Integer.toString(file.getFileSize()) + "bytes";
+		uploadForm.setSize(size);
+
+		InputStream is = file.getInputStream();
+		// System.out.println(servlet.getServletContext());
+		String path = request.getRealPath("/excelFilesData");
+
+		OutputStream os = new FileOutputStream(path + "/" + filename);
+
+		int bytes = 0;
+		byte[] buffer = new byte[8192];
+		while ((bytes = is.read(buffer, 0, 8192)) != -1) {
+			os.write(buffer, 0, bytes);
+		}
+		os.close();
+		is.close();
+		file.destroy();
+		// 文件解析
+		String impPath = path + "\\" + filename;
+		System.out.println("上传后文件所在路径：" + impPath);
+		InputStream is4imp = new FileInputStream(impPath);
+		// 非福利假数组
+		String[] fflPsaType = { "事假", "病假" };
+		// 员工基本信息 导入
+		if ("empbi".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(1, is4imp, excelVersion);// 从第2行开始读取
+			System.out.println("本次导入基本信息条数：" + lt.size() + "条");
+			//查询所有标准日期info
+			List<HoursWorkStandardInfo> stdHoursList = hoursWorkService.queryStdHourswork(new HoursWorkStandardInfo());
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				if (str[0] == null || str[0].trim().length() == 0)
+					continue;
+				EmployeeBasicInfo e = new EmployeeBasicInfo();
+				// 员工编号
+				e.setEmployeeId(String
+						.valueOf((int) Double.parseDouble(str[0].replace(" ", ""))));
+				// 员工姓名
+				e.setEmployeeName(str[1].replace(" ", ""));
+				//客户定义姓名
+				e.setChinaBankName(str[1].replace(" ", ""));
+				// 员工性别
+				if ("男".equals(str[2].trim())) {
+					e.setEmployeeGender("0");
+				} else if ("女".equals(str[2].trim())) {
+					e.setEmployeeGender("1");
+				}
+				// 入职日期
+				if(str[3]!=null&&str[3].trim().length()>0)
+				e.setEntryDate(GmsUtils.gmsFormToDate(str[3].trim()));
+				// 通用职位
+				e.setCommonPosition(str[4]);
+				// 成本中心
+				e.setCostCenter(str[5]);
+				// 组织单位3
+				e.setOrganizationalUnit3(str[6]);
+				// 人事范围
+				e.setPersonnelRange(str[7]);
+				// 工作地文本
+				e.setWorkPlaceText(str[8]);
+				// 人事子范围
+				e.setPersonnelSubRange(str[9]);
+				// 司龄(月)
+				e.setDrivingAgeMonth(str[10]);
+				// 工龄(年)
+				e.setWorkingAgeYear(str[11]);
+				// 员工组
+				if ("正式员工".equals(str[12])) {
+					e.setEmployeeGroup("0");
+				} else if ("试用员工".equals(str[12])) {
+					e.setEmployeeGroup("1");
+				} else if ("实习生".equals(str[12])) {
+					e.setEmployeeGroup("2");
+				}
+				// 员工子组
+				if ("实施".equals(str[13])) {
+					e.setEmployeeSubGroup("0");
+				} else if ("销售".equals(str[13])) {
+					e.setEmployeeSubGroup("1");
+				}
+				// 职级
+				if ("BUhead".equals(str[14].trim())) {
+					e.setRank("0");
+				} else if ("部门总监".equals(str[14])) {
+					e.setRank("1");
+				} else if ("客户总监".equals(str[14])) {
+					e.setRank("2");
+				} else if ("项目经理".equals(str[14])) {
+					e.setRank("3");
+				} else if ("项目组长".equals(str[14])) {
+					e.setRank("4");
+				} else if ("客户经理".equals(str[14])) {
+					e.setRank("5");
+				}
+				// 学历
+				e.setEducationa(str[16]);
+				// 专业名称
+				e.setSpecialtyName(str[17]);
+				// 公司邮箱
+				e.setCompanyMailBox(str[18]);
+				// 手机号码
+				e.setMobileNumber(str[19]);
+				// 证件类别
+				if ("01 身份证".equals(str[20])) {
+					e.setCredentialsType("0");
+				} else if ("02 护照".equals(str[20])) {
+					e.setCredentialsType("1");
+				} else if ("02 军官证".equals(str[20])) {
+					e.setCredentialsType("2");
+				}
+				// 证件号码
+				e.setCredentialsNumber(str[21]);
+				// 组织单位4
+				e.setOrganizationalUnit4(str[22]);
+				// 组织单位5
+				e.setOrganizationalUnit5(str[23]);
+				// 组织单位6
+				e.setOrganizationalUnit6(str[24]);
+				// 毕业日期
+				if(str[25]!=null&&str[25].trim().length()>0)
+				e.setGraduationDate(GmsUtils.gmsFormToDate(str[25]));
+				// 毕业学校/城市
+				e.setGraduationSchoolOrCity(str[26]);
+
+				//添加工时详情
+				for(HoursWorkStandardInfo hwsi: stdHoursList){
+					EmployeeHoursDetailInfo ehdi = new EmployeeHoursDetailInfo();
+					ehdi.setEmployeeId(String.valueOf((int) Double.parseDouble(str[0].replace(" ", ""))));
+					ehdi.setEmployeeName(str[1].replace(" ", ""));
+					ehdi.setStandardDateType(hwsi.getStandardDateType());
+					ehdi.setStandardDate(hwsi.getStandardDate());
+					ehdi.setStandardHours(hwsi.getStandardHours());
+					ehdi.setStandardWeek(hwsi.getStandardWeek());
+					ehdi.setCurrentGapHours((float)hwsi.getStandardHours());
+					try {
+						hoursWorkService.addHoursDetailInfo(ehdi);
+					} catch (SQLException ex) {
+						log.equals(str[0] + ":" + ex.getMessage());
+						continue;
+					}
+				}
+				try {
+					//添加工时统计表中员工相关信息
+					hoursWorkService.addHoursStatisticsInfo(e);
+					//添加员工基本信息
+					employeeService.addEmpInfo(e);
+				} catch (SQLException ex) {
+					log.equals(str[0] + ":" + ex.getMessage());
+					continue;
+				}
+			}
+		}
+		//归属信息导入
+		else if ("eri".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(3, is4imp, excelVersion);// 从第3行开始读取
+			System.out.println("本次导入归属信息条数：" + lt.size() + "条");
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				if(str[6]==null || str[6].trim().length()==0) continue;//员工编号不能为空
+				EmployeeRelegationInfo eri = new EmployeeRelegationInfo();
+				eri.setProjectDirector(str[0]);
+				eri.setProjectManager(str[2]);
+				eri.setProjectLeader(str[4]);
+				if("高级".equals(str[5])){
+					eri.setGrade("2");
+				}else if("中级".equals(str[5])){
+					eri.setGrade("1");
+				}else if("初级".equals(str[5])){
+					eri.setGrade("0");
+				}else{
+					eri.setGrade("");
+				}
+				eri.setEmployeeId(String.valueOf((int) Double.parseDouble(str[6])));
+				eri.setEmployeeName(str[7]);
+				
+				if("长期休假".equals(str[8])){
+					eri.setWorkstaus("0");
+				}else if("未到岗".equals(str[8])){
+					eri.setWorkstaus("1");
+				}else if("计费".equals(str[8])){
+					eri.setWorkstaus("2");
+				}else if("结束".equals(str[8])){
+					eri.setWorkstaus("3");
+				}else if("闲置".equals(str[8])){
+					eri.setWorkstaus("4");
+				}else if("离职".equals(str[8])){
+					eri.setWorkstaus("5");
+				}else if("借调外部门".equals(str[8])){
+					eri.setWorkstaus("6");
+				}else if("借入".equals(str[8])){
+					eri.setWorkstaus("7");
+				}else if("现场储备".equals(str[8])){
+					eri.setWorkstaus("8");
+				}else if("公司储备".equals(str[8])){
+					eri.setWorkstaus("9");
+				}else{
+					eri.setWorkstaus("");
+				}
+				if("总体部".equals(str[9])){
+					eri.setBusinessLine("0");
+				}else if("上海分行".equals(str[9])){
+					eri.setBusinessLine("1");
+				}else if("信息中心".equals(str[9])){
+					eri.setBusinessLine("2");
+				}else if("山东".equals(str[9])){
+					eri.setBusinessLine("3");
+				}else if("电子渠道".equals(str[9])){
+					eri.setBusinessLine("4");
+				}else if("国际结算".equals(str[9])){
+					eri.setBusinessLine("5");
+				}else if("信息管理".equals(str[9])){
+					eri.setBusinessLine("6");
+				}else if("投资代理".equals(str[9])){
+					eri.setBusinessLine("7");
+				}else if("质量管理".equals(str[9])){
+					eri.setBusinessLine("8");
+				}else if("核心业务".equals(str[9])){
+					eri.setBusinessLine("9");
+				}else if("上海".equals(str[9])){
+					eri.setBusinessLine("10");
+				}else if("深圳".equals(str[9])){
+					eri.setBusinessLine("11");
+				}else if("成都".equals(str[9])){
+					eri.setBusinessLine("12");
+				}else{
+					eri.setBusinessLine("");
+				}
+				eri.setBelongedTSproject(str[10]);
+				if(str[12]!=null&&str[12].trim().length()>0)
+					eri.setAdmittancefreeDate(GmsUtils.gmsFormToDate(str[12]));
+				if(str[13]!=null&&str[13].trim().length()>0)
+					eri.setAdmittancebillingDate(GmsUtils.gmsFormToDate(str[13]));
+				if(str[14]!=null&&str[14].trim().length()>0)
+					eri.setOutsceneestimateDate(GmsUtils.gmsFormToDate(str[14]));
+				if(str[15]!=null&&str[15].trim().length()>0)
+					eri.setOutscenerealityDate(GmsUtils.gmsFormToDate(str[15]));
+				try {
+					employeeService.addRelegationInfo(eri);
+				} catch (SQLException e) {
+					log.equals(str[0] + ":" + e.getMessage());
+					continue;
+				}
+			}
+		}
+		// 项目信息导入
+		else if ("proj".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(1, is4imp, excelVersion);// 从第2行开始读取
+			System.out.println("本次导入项目信息条数：" + lt.size() + "条");
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				ProjectInfo p = new ProjectInfo();
+				// 项目编号
+				p.setProId(str[0]);
+				// 项目名称
+				p.setProName(str[1]);
+				// 事业部
+				p.setCareerdepartment(str[2]);
+				// 实施部
+				p.setImplementDepartment(str[3]);
+				// 项目经理
+				p.setProjectManager(str[4]);
+				// 客户名称
+				p.setCustomerName(str[5]);
+				// 开始日期
+				p.setBeginDate(GmsUtils.gmsFormToDate(str[6]));
+				// 结束日期
+				p.setEndDate(GmsUtils.gmsFormToDate(str[7]));
+				try {
+					projectService.addProjectInfo(p);
+				} catch (SQLException e) {
+					log.equals(str[0] + ":" + e.getMessage());
+					continue;
+				}
+			}
+		}
+
+		// 员工离职信息导入
+		else if ("edi".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(1, is4imp, excelVersion);// 从第2行开始读取
+			System.out.println("本次导入离职信息条数：" + lt.size() + "条");
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				EmployeeDimissionInfo edi = new EmployeeDimissionInfo();
+				edi.setEmployeeId(str[0]);
+				edi.setEmployeeName(str[1]);
+				edi.setEntryDate(str[2]);
+				edi.setDepartment(str[3]);
+				edi.setDependency(str[4]);
+				edi.setPersonnelSubrangeText(str[5]);
+				edi.setEmployeeGroup(str[6]);
+				edi.setCommonPosition(str[7]);
+				edi.setBusinessNature(str[8]);
+				edi.setEnterpriseflock(str[9]);
+				edi.setEnterpriseflockCode(str[10]);
+				edi.setDepartmentCode(str[11]);
+				edi.setDependencyCode(str[12]);
+				edi.setPersonnelSubrange(str[13]);
+				edi.setWorkPlace(str[14]);
+				edi.setTrialPeriod(str[15]);
+				edi.setAppraisalDate(str[16]);
+				edi.setResignationDate(GmsUtils.gmsFormToDate(str[17]));
+				edi.setResignationStatus(str[18]);
+				edi.setResignationReasons(str[19]);
+				if ("被动".equals(str[20])) {
+					edi.setInitiativeOrPassive("1");
+				} else
+					edi.setInitiativeOrPassive("0");
+				try {
+					employeeService.addDimissionInfo(edi);
+				} catch (SQLException e) {
+					log.equals(str[0] + ":" + e.getMessage());
+					continue;
+				}
+			}
+		}
+		// 员工请假信息导入
+		else if ("evi".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(1, is4imp, excelVersion);// 从第2行开始读取
+			System.out.println("本次导入请假信息条数：" + lt.size() + "条");
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				EmployeeVacationInfo evi = new EmployeeVacationInfo();
+				// 请假的开始日期和结束日期为同一天
+				if (GmsUtils.gmsFormToDate(str[5]).equals(
+						GmsUtils.gmsFormToDate(str[6]))) {
+					evi.setEmployeeId(String.valueOf((int) Double
+							.parseDouble(str[0])));
+					evi.setEmployeeName(str[1]);
+					evi.setDepartmentId(String.valueOf((int) Double
+							.parseDouble(str[2])));
+					evi.setDepartmentName(str[3]);
+					evi.setLeaveTypeName(str[4]);
+					evi.setPsaDate(GmsUtils.gmsFormToDate(str[5]));
+					evi.setTotalNumberHours(str[9]);
+					evi.setReceiptStatus(str[10]);
+					evi.setApprovedByDate(str[11]);
+					for (int k = 0; k < fflPsaType.length; k++) {
+						if (fflPsaType[k].equals(str[4].trim())) {
+							// 非福利假
+							evi.setIsWelfareHoliays("1");
+						} else {
+							// 福利假
+							evi.setIsWelfareHoliays("0");
+						}
+					}
+					// System.out.println(str[1]+":--"+str[5]);
+					try {
+						employeeService.addVacationInfo(evi);
+					} catch (SQLException e) {
+						log.equals(str[0] + ":" + e.getMessage());
+						continue;
+					}
+
+				} else if (GmsUtils.gmsFormToDate(str[6]).after(
+						GmsUtils.gmsFormToDate(str[5]))) {// 请假跨多天
+					// 获得开始日期与结束日期之前的所有日期（包括开始和结束日期）
+					List<Date> dates = GmsUtils.getBetweenDates(GmsUtils
+							.gmsFormToDate(str[5]), GmsUtils
+							.gmsFormToDate(str[6]));
+					//排除非工作日期
+					for(int j=dates.size()-1;j>=0;j--){ 
+						String st = hoursWorkService.queryDateType(dates.get(j));
+						if(!"0".equals(st))
+							dates.remove(j) ;
+					}
+					for (Date tem : dates) {
+						evi.setEmployeeId(String.valueOf((int) Double
+								.parseDouble(str[0])));
+						evi.setEmployeeName(str[1]);
+						evi.setDepartmentId(String.valueOf((int) Double
+								.parseDouble(str[2])));
+						evi.setDepartmentName(str[3]);
+						evi.setLeaveTypeName(str[4]);
+						evi.setPsaDate(tem);
+						evi.setTotalNumberHours("8");
+						evi.setReceiptStatus(str[10]);
+						evi.setApprovedByDate(str[11]);
+						for (int k = 0; k < fflPsaType.length; k++) {
+							if (fflPsaType[k].equals(str[4].trim())) {
+								// 非福利假
+								evi.setIsWelfareHoliays("1");
+							} else {
+								// 福利假
+								evi.setIsWelfareHoliays("0");
+							}
+						}
+						// System.out.println(str[1]+":--"+new
+						// SimpleDateFormat("yyyy-MM-dd").format(tem));
+						try {
+							employeeService.addVacationInfo(evi);
+						} catch (SQLException e) {
+							log.equals(str[0] + ":" + e.getMessage());
+							continue;
+						}
+					}
+				} else {
+					// 数据错误，结束日期在开始时间之前，跳过本条错误信息
+					continue;
+				}
+			}
+		}
+		// 标准工时导入
+		else if ("hws".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(1, is4imp, excelVersion);// 从第2行开始读取
+			System.out.println("本次导入标准工时条数：" + lt.size() + "条");
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				HoursWorkStandardInfo hwsi = new HoursWorkStandardInfo();
+				hwsi.setStandardDate(GmsUtils.gmsFormToDate(str[0]));
+				hwsi.setStandardWeek(str[1]);
+				if ("工作日".equals(str[2])) {
+					hwsi.setStandardDateType("0");
+				} else if ("双休日".equals(str[2])) {
+					hwsi.setStandardDateType("1");
+				} else if ("节假日".equals(str[2])) {
+					hwsi.setStandardDateType("2");
+				} else {
+					hwsi.setStandardDateType(null);
+				}
+				hwsi.setStandardHours((int) Double.parseDouble(str[3]));
+				try {
+					hoursWorkService.addStdHoursworkInfo(hwsi);
+				} catch (SQLException e) {
+					log.equals(str[0] + ":" + e.getMessage());
+					continue;
+				}
+			}
+		}
+		// 客户确认工时导入
+		else if ("cci".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(1, is4imp, excelVersion);// 从第2行开始读取（0为第一行）
+			System.out.println("本次导入客户确认工时信息条数：" + lt.size() + "条");
+			log.debug("本次导入客户确认工时信息条数：" + lt.size() + "条");
+			//导入时发生异常的员工姓名
+			String errorNames ="";
+			//每次循环放入当前导入的员工姓名，来与下一个导入员工做排重
+			String tempName="";
+			//本次导入成功的数据条数
+			int impCount=0;
+			//本次导入的日期对应的标准工时总和
+			float totalStdHours= 0f;
+			//本次导入的客户确认正常工时总和
+			float totalCusNormalHours=0f;
+			
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				//获取员工基本信息表中员工对应employeeId
+				List<EmployeeBasicInfo> temp = employeeService.queryByCusName(str[11].trim()); 
+				if(temp.size()!=1) {
+					if(!tempName.equals(str[11].trim()))
+					errorNames+=str[11]+",";
+					//排重
+					tempName=str[11];
+					continue;
+				}
+				CustomerVerifyHoursInfo cvhi = new CustomerVerifyHoursInfo();
+				cvhi.setEmployeeId(temp.get(0).getEmployeeId());
+				
+				if(str[0]!=null&&str[0].trim().length()>0)
+				cvhi.setResourcesType(str[0]);
+				else cvhi.setResourcesType(" ");
+				
+				if(str[1]!=null&&str[1].trim().length()>0)
+				cvhi.setProjectName(str[1]);
+				else cvhi.setProjectName(" ");
+				
+				if(str[2]!=null&&str[2].trim().length()>0)
+				cvhi.setProjectId(str[2]);
+				else cvhi.setProjectId(" ");
+				
+				if(str[3]!=null&&str[3].trim().length()>0)
+				cvhi.setProjectOfDepartment(str[3]);
+				else cvhi.setProjectOfDepartment(" ");
+				
+				if(str[4]!=null&&str[4].trim().length()>0)
+				cvhi.setProductName(str[4]);
+				else cvhi.setProductName(" ");
+				
+				if(str[5]!=null&&str[5].trim().length()>0)
+				cvhi.setServiceProductsAttributiveTeam(str[5]);
+				else cvhi.setServiceProductsAttributiveTeam(" ");
+				
+				if(str[6]!=null&&str[6].trim().length()>0)
+				cvhi.setServiceProductsDepartment(str[6]);
+				else cvhi.setServiceProductsDepartment(" ");
+				
+				if(str[7]!=null&&str[7].trim().length()>0)
+				cvhi.setProviders(str[7]);
+				else cvhi.setProviders(" ");
+				
+				if(str[8]!=null&&str[8].trim().length()>0)
+				cvhi.setTechnologyPlatform(str[8]);
+				else cvhi.setTechnologyPlatform(" ");
+				
+				if(str[9]!=null&&str[9].trim().length()>0)
+				cvhi.setPresenceOfType(str[9]);
+				else cvhi.setPresenceOfType(" ");
+				
+				if(str[10]!=null&&str[10].trim().length()>0)
+				cvhi.setWorkPlace(str[10]);
+				else cvhi.setWorkPlace(" ");
+				
+				cvhi.setEmployeeName(str[11].trim());
+				
+				if(str[12]!=null&&str[12].trim().length()>0)
+				cvhi.setTechnologyGrade(str[12]);
+				else cvhi.setTechnologyGrade(" ");
+				
+				cvhi.setWorkDate(GmsUtils.gmsFormToDate(str[13]));
+				cvhi.setNormalWorkingHours(Float.parseFloat(str[14]));
+				cvhi.setOverTimeHours(Float.parseFloat(str[15]));
+//				cvhi.setIsBilling(str[16]);
+				
+				
+				//更新工时详情表信息
+				//更新工时统计表信息
+				HoursWorkStatisticsInfo tempHwsi = hoursWorkService.queryHoursStatistics(temp.get(0).getEmployeeId());
+				HoursWorkStandardInfo hwsi = hoursWorkService.queryStdInfoByDate(GmsUtils.gmsFormToDate(str[13]));
+				//构建更新工时统计实体
+				HoursWorkStatisticsInfo hwsii= new HoursWorkStatisticsInfo();
+				//客户确认总工时
+				float csth = tempHwsi.getCustomerSureTotalHours();
+				csth+=Float.parseFloat(str[14]);
+				hwsii.setCustomerSureTotalHours(csth);
+				//标准总工时
+				float sth = tempHwsi.getStandardTotalHours();
+				sth+=hwsi.getStandardHours();
+				
+				try {
+					hoursWorkService.addCstmHoursworkInfo(cvhi);
+					impCount++;
+				} catch (SQLException e) {
+					log.equals(str[0] + ":" + e.getMessage());
+					continue;
+				}
+			}
+			if(errorNames.trim().length()>0) request.setAttribute("errorNames", errorNames);
+			request.setAttribute("impCount", impCount);
+			return mapping.findForward("toCstmHw");
+		}
+		// GAP工时导入 同时update
+		else if ("whg".equals(uploadForm.getFlag())) {
+			List<String[]> lt = GmsUtils.readExcel(2, is4imp, excelVersion);// 从第3行开始读取
+			System.out.println("本次导入GAP工时信息条数：" + lt.size() + "条");
+			String [] gapType2Update ={};//会发生冲销操作的差异类型
+			String [] gapTypeAll ={"0","1","2","3","4","5","6","7","8"};//所有差异类型
+			for (int i = 0; i < lt.size(); i++) {
+				String[] str = (String[]) lt.get(i);
+				String gapType = "";
+				//工号、日期 不能为空
+				if(str[0]==null || str[0].trim().length()==0 || str[2]==null || str[2].trim().length()==0 || str[14]==null || str[14].trim().length()!=1) continue;
+				for(String gt:gapTypeAll){
+					if(gt.equals(str[14].trim())){
+						gapType=str[14].trim();
+						break;
+					}
+				}
+				if(gapType.length()!=1) continue;//验证差异类型是否符合要求 
+				EmployeeHoursDetailInfo egvi = new EmployeeHoursDetailInfo();
+				egvi.setEmployeeId(str[0]);
+				egvi.setEmployeeName(str[1]);
+				egvi.setStandardDate(GmsUtils.gmsFormToDate(str[2]));
+				egvi.setStandardWeek(str[3]);
+				egvi.setStandardDateType(str[4]);
+				egvi.setStandardHours(str[5]==null?null:Integer.parseInt(str[5]));
+				egvi.setProjectName(str[6]);
+				if(str[7]!=null&&str[7].trim().length()>0)
+				egvi.setCustomerVerifyHours(Float.parseFloat(str[7]));
+				if(str[8]!=null&&str[8].trim().length()>0)
+				egvi.setCustomerVerifyOvertimeHours(Float.parseFloat(str[8]));
+				if(str[9]!=null&&str[9].trim().length()>0)
+				egvi.setPsaLeaveHours(Float.parseFloat(str[9]));
+				egvi.setPsaLeaveHoursType(str[10]);
+				if(str[11]!=null&&str[11].trim().length()>0)
+				egvi.setCurrentAhughHours(Float.parseFloat(str[11]));
+				if(str[12]!=null&&str[12].trim().length()>0)
+				egvi.setCurrentSubsidiesHours(Float.parseFloat(str[12]));
+				
+				//导入时，GAP工时自动清零
+				egvi.setCurrentGapHours(0f);
+				egvi.setGapType(String.valueOf((int)Double.parseDouble(str[14])));
+				egvi.setEmployeeGapReason(str[15]);
+				egvi.setCustomerResponsiblePerson(str[16]);
+				egvi.setCompanyProjectManager(str[17]);
+				egvi.setBelongedProject(str[18]);
+				System.out.println(str[0]+"==="+str[2]+"==="+str[14]+"==="+str[13]);
+				
+				try {
+					hoursWorkService.modifyGapInfo(egvi);
+				} catch (SQLException e) {
+					log.equals(str[0] + ":" + e.getMessage());
+					continue;
+				}
+				
+				//差异类型为指定类型 需更新员工剩余倒休工时
+				for(String tem :gapType2Update){
+					if(tem.equals(str[14].trim())){
+						HoursWorkStatisticsInfo hwsi = new HoursWorkStatisticsInfo();
+						hwsi.setEmployeeId(str[0]);
+						if(str[13]!=null&&str[13].trim().length()>0)
+						hwsi.setHours2udtLast(Float.parseFloat(str[13]));
+						hoursWorkService.modifyLastHours(hwsi);
+					}
+				}
+			}
+		}
+		is4imp.close();
+		// 删除上传excel文件
+		File f = new File(path + "\\" + filename);
+		f.delete();
+		return mapping.findForward("success");
+	}
+}

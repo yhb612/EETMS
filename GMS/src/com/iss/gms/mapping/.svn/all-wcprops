@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/GMS_repository/!svn/ver/66/trunk/GMS/src/com/iss/gms/mapping
+END
+hourswork_sql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/mapping/hourswork_sql.xml
+END
+project_sql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/mapping/project_sql.xml
+END
+import_sql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/mapping/import_sql.xml
+END
+user_sql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/mapping/user_sql.xml
+END
+employee_sql.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/mapping/employee_sql.xml
+END

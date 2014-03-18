@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+<tiles-definitions>
+	<definition name="baseLayout" path="/WEB-INF/jsp/template.jsp">
+		  <put name="title" value="企业差旅管理系统" />
+		  <put name="header" value="/WEB-INF/jsp/header.jsp"/>
+		  <put name="menu" value="/WEB-INF/jsp/menu.jsp"/>
+		  <put name="body" value="/WEB-INF/jsp/body.jsp" />
+	</definition>
+	
+	<definition name="indexLayout" extends="baseLayout">
+		<put name="body1" value="/WEB-INF/jsp/indexContent.jsp" />
+	</definition>
+	
+	<definition name="empLayout" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/emp_mage/employeeMsgMgr.jsp" />
+	</definition>
+	
+	<definition name="empRelegation" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/emp_mage/emp_belong_mgr.jsp" />
+	</definition>
+	
+	<definition name="projLayout" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/pro_mage/project_mgr.jsp" />
+	</definition>
+	<definition name="empVacation" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/emp_mage/emp_vacation_mgr.jsp" />
+	</definition>
+	
+	<definition name="gapchLayout" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/hourswork_mage/workHours_GAP_mgr.jsp" />
+	</definition>
+	<definition name="empDimission" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/emp_mage/emp_dimission_mgr.jsp" />
+	</definition>
+	<definition name="hwStandard" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/hourswork_mage/workHours_standard_mgr.jsp" />
+	</definition>
+	<definition name="customertLayout" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/hourswork_mage/workHours_confirm_mgr.jsp" />
+	</definition>
+	<definition name="customerPrice" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/emp_mage/cstm_quote_mgr.jsp" />
+	</definition>
+	<definition name="worktime4chk" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/sys_srch/workHours_detail4check.jsp" />
+	</definition>
+	<definition name="costPre" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/sys_srch/income_cost_prediction.jsp" />
+	</definition>
+	<definition name="hoursOT" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/sys_srch/hours_overTime_info.jsp" />
+	</definition>
+	<definition name="empRelSta" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/sys_srch/emp_rel_sta.jsp" />
+	</definition>
+	<definition name="cusIc" extends="baseLayout">
+		<put name="body" value="/WEB-INF/jsp/sys_srch/cus_income_query.jsp" />
+	</definition>
+	
+</tiles-definitions>

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/GMS_repository/!svn/ver/67/trunk/GMS/src/com/iss/gms/web/action/hourswork
+END
+CustomeerHourAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/GMS_repository/!svn/ver/30/trunk/GMS/src/com/iss/gms/web/action/hourswork/CustomeerHourAction.java
+END
+HoursworkStandardAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/web/action/hourswork/HoursworkStandardAction.java
+END
+GapCheckAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/web/action/hourswork/GapCheckAction.java
+END

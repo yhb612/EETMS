@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds
+END
+struts-logic.tld
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds/struts-logic.tld
+END
+c.tld
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds/c.tld
+END
+spring.tld
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds/spring.tld
+END
+struts-tiles.tld
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds/struts-tiles.tld
+END
+spring-form.tld
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds/spring-form.tld
+END
+fmt.tld
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds/fmt.tld
+END
+struts-html.tld
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tlds/struts-html.tld
+END

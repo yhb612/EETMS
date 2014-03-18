@@ -1,0 +1,112 @@
+package com.iss.gms.entity;
+
+import java.util.Date;
+
+/**
+ * @author Administrator
+ *本类已弃用       
+ *
+ *参考EmpolyeeGapVerificationInfo;
+ */
+public class EmployeeHoursDetailInfo {
+
+	private String employeeId;
+	private String employeeName;
+	private String standardDateType;
+	private Date standardDate;
+	private Integer standardHours;
+	private Float customerVerifyHours;
+	private Float customerVerifyOvertimeHours;
+	private Float psaLeavehours;
+	private String psaLeavehoursType;
+	private Float currentAhughHours;
+	private Float currentSubsidiesHours;
+	private Float currentGapHours;
+	private Integer standardHoursAll;
+	private Float customerVerifyHoursAll;
+	public String getEmployeeId() {
+		return employeeId;
+	}
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+	}
+	public String getEmployeeName() {
+		return employeeName;
+	}
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+	public String getStandardDateType() {
+		return standardDateType;
+	}
+	public void setStandardDateType(String standardDateType) {
+		this.standardDateType = standardDateType;
+	}
+	public Date getStandardDate() {
+		return standardDate;
+	}
+	public void setStandardDate(Date standardDate) {
+		this.standardDate = standardDate;
+	}
+	public Integer getStandardHours() {
+		return standardHours;
+	}
+	public void setStandardHours(Integer standardHours) {
+		this.standardHours = standardHours;
+	}
+	public Float getCustomerVerifyHours() {
+		return customerVerifyHours;
+	}
+	public void setCustomerVerifyHours(Float customerVerifyHours) {
+		this.customerVerifyHours = customerVerifyHours;
+	}
+	public Float getCustomerVerifyOvertimeHours() {
+		return customerVerifyOvertimeHours;
+	}
+	public void setCustomerVerifyOvertimeHours(Float customerVerifyOvertimeHours) {
+		this.customerVerifyOvertimeHours = customerVerifyOvertimeHours;
+	}
+	public Float getPsaLeavehours() {
+		return psaLeavehours;
+	}
+	public void setPsaLeavehours(Float psaLeavehours) {
+		this.psaLeavehours = psaLeavehours;
+	}
+	public String getPsaLeavehoursType() {
+		return psaLeavehoursType;
+	}
+	public void setPsaLeavehoursType(String psaLeavehoursType) {
+		this.psaLeavehoursType = psaLeavehoursType;
+	}
+	public Float getCurrentAhughHours() {
+		return currentAhughHours;
+	}
+	public void setCurrentAhughHours(Float currentAhughHours) {
+		this.currentAhughHours = currentAhughHours;
+	}
+	public Float getCurrentSubsidiesHours() {
+		return currentSubsidiesHours;
+	}
+	public void setCurrentSubsidiesHours(Float currentSubsidiesHours) {
+		this.currentSubsidiesHours = currentSubsidiesHours;
+	}
+	public Float getCurrentGapHours() {
+		return currentGapHours;
+	}
+	public void setCurrentGapHours(Float currentGapHours) {
+		this.currentGapHours = currentGapHours;
+	}
+	public Integer getStandardHoursAll() {
+		return standardHoursAll;
+	}
+	public void setStandardHoursAll(Integer standardHoursAll) {
+		this.standardHoursAll = standardHoursAll;
+	}
+	public Float getCustomerVerifyHoursAll() {
+		return customerVerifyHoursAll;
+	}
+	public void setCustomerVerifyHoursAll(Float customerVerifyHoursAll) {
+		this.customerVerifyHoursAll = customerVerifyHoursAll;
+	}
+	
+}

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >     
+    
+<sqlMap namespace="employee">
+	 <typeAlias alias="employeeBasicInfo" type="com.iss.gms.entity.EmployeeBasicInfo"/>
+	 <typeAlias alias="empRelegationInfo" type="com.iss.gms.entity.EmployeeRelegationInfo"/>
+	 <typeAlias alias="empVacationInfo" type="com.iss.gms.entity.EmployeeVacationInfo"/>
+	 <typeAlias alias="empDimissionInfo" type="com.iss.gms.entity.EmployeeDimissionInfo"/>
+	 <typeAlias alias="cstmQuoteInfo" type="com.iss.gms.entity.CustomerQuoteInfo"/>
+	 
+	 
+	 <!-- 员工基本信息  开始 -->
+	 <!-- 根据姓名或工号查询 -->
+	 <select id="queryByName" parameterClass="java.lang.String" resultClass="employeeBasicInfo" >
+	 	select * from employee_basic_info where 1=1
+	 	<isNotEmpty prepend="AND" >
+	 		EMPLOYEENAME=#name# or EMPLOYEEID=#name#
+	 	</isNotEmpty>
+	 	ORDER BY EMPLOYEENAME
+	 </select>
+	<!-- 根据客户定义姓名查询 -->
+	 <select id="queryByCusName" parameterClass="java.lang.String" resultClass="employeeBasicInfo" >
+	 	select * from employee_basic_info where CHINABANKNAME=#chinaBankName#
+	 </select>
+	 <insert id="insertEmpInfo" parameterClass="employeeBasicInfo">
+	
+		insert into employee_basic_info (
+				EMPLOYEEID,EMPLOYEENAME,EMPLOYEEGENDER,ENTRYDATE,COMMONPOSITION,
+  			    COSTCENTER,ORGANIZATIONALUNIT3,PERSONNELRANGE,WORKPLACETEXT,PERSONNELSUBRANGE,
+  				DRIVINGAGEMONTH,WORKINGAGEYEAR,EMPLOYEEGROUP,EMPLOYEESUBGROUP,RANK,EDUCATIONA,
+  				SPECIALTYNAME,COMPANYMAILBOX,MOBILENUMBER,CREDENTIALSTYPE,CREDENTIALSNUMBER,
+  				ORGANIZATIONALUNIT4,ORGANIZATIONALUNIT5,ORGANIZATIONALUNIT6,GRADUATIONDATE,
+  				GRADUATIONSCHOOLORCITY,ITSAFFILIATES,CONTRACTWAGES,SOCIETYINDEMNIFICATION,
+  				FIRSTSKILL,SECONDSKILL,SKILLDESCRIPTION,CHINABANKNAME) 
+		values(
+				#employeeId#, #employeeName#, #employeeGender#, #entryDate#,#commonPosition#,#costCenter#,
+				#organizationalUnit3#,#personnelRange#,#workPlaceText#,#personnelSubRange#,#drivingAgeMonth#,#workingAgeYear#,		
+				#employeeGroup#,#employeeSubGroup#,#rank#,#educationa#,#specialtyName#,#companyMailBox#,#mobileNumber#,	
+				#credentialsType#,#credentialsNumber#,#organizationalUnit4#,#organizationalUnit5#,#organizationalUnit6#,	
+				#graduationDate#,#graduationSchoolOrCity#,#itsaffiliates#,#contractWages#,#societyindemnification#,	
+	 			#firstSkill#,#secondSkill#,#skillDescription#,#chinaBankName#)
+	</insert>
+	
+	<update id="modifyEmpInfo" parameterClass="employeeBasicInfo">
+		update employee_basic_info 
+		set EMPLOYEENAME=#employeeName#, EMPLOYEEGENDER=#employeeGender#, 
+			ENTRYDATE=#entryDate#,COMMONPOSITION=#commonPosition#,
+			COSTCENTER=#costCenter#,ORGANIZATIONALUNIT3=#organizationalUnit3#,
+			PERSONNELRANGE=#personnelRange#,WORKPLACETEXT=#workPlaceText#,
+			PERSONNELSUBRANGE=#personnelSubRange#,DRIVINGAGEMONTH=#drivingAgeMonth#,
+			WORKINGAGEYEAR=#workingAgeYear#,EMPLOYEEGROUP=#employeeGroup#,
+			EMPLOYEESUBGROUP=#employeeSubGroup#,RANK=#rank#,
+			EDUCATIONA=#educationa#,SPECIALTYNAME=#specialtyName#,
+			COMPANYMAILBOX=#companyMailBox#,MOBILENUMBER=#mobileNumber#,	
+			CREDENTIALSTYPE=#credentialsType#,CREDENTIALSNUMBER=#credentialsNumber#,
+			ORGANIZATIONALUNIT4=#organizationalUnit4#,ORGANIZATIONALUNIT5=#organizationalUnit5#,
+			ORGANIZATIONALUNIT6=#organizationalUnit6#,GRADUATIONDATE=#graduationDate#,
+			GRADUATIONSCHOOLORCITY=#graduationSchoolOrCity#,ITSAFFILIATES=#itsaffiliates#,
+			CONTRACTWAGES=#contractWages#,SOCIETYINDEMNIFICATION=#societyindemnification#,	
+	 		FIRSTSKILL=#firstSkill#,SECONDSKILL=#secondSkill#,SKILLDESCRIPTION=#skillDescription#,
+	 		CHINABANKNAME=#chinaBankName#
+		where EMPLOYEEID=#employeeId#
+	</update>
+	
+	<delete id="removeEmpInfo" parameterClass="java.lang.String">
+			delete from employee_basic_info where EMPLOYEEID=#eid# 
+	</delete>
+	
+	<!-- 查询所有部门 -->
+	<select id="queryDptmts" resultClass="java.lang.String" >
+		SELECT DISTINCT ORGANIZATIONALUNIT6 FROM EMPLOYEE_BASIC_INFO
+	</select>
+	
+	<!-- 查询某职级的所有员工姓名 -->
+	<select id="queryNameListByRank" resultClass="java.lang.String" parameterClass="java.lang.String">
+		SELECT EMPLOYEENAME FROM EMPLOYEE_BASIC_INFO WHERE RANK=#rank#
+	</select>
+	
+	
+	<!-- 员工基本信息  结束 -->
+	
+	
+<!-- 员工归属信息  开始 -->
+		
+	<!-- 根据综合条件查询 -->
+	 <select id="queryRelegationInfo" parameterClass="empRelegationInfo" resultClass="empRelegationInfo" >
+	 	select * from employee_relegation_info where 1=1
+	 	<isNotEmpty prepend="AND"  property="employeeName" >
+	 		(EMPLOYEENAME=#employeeName# OR EMPLOYEEID=#employeeName#)
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="estimateLDateS" >
+	 		OUTSCENEESTIMATEDATE &gt;= #estimateLDateS#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="estimateLDateE" >
+	 		OUTSCENEESTIMATEDATE &lt;= #estimateLDateE#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="projectManager" >
+	 		PROJECTMANAGER=#projectManager#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="workstaus" >
+	 		WORKSTAUS=#workstaus#
+	 	</isNotEmpty>
+	 	ORDER BY EMPLOYEENAME
+	 </select>
+	 <!-- 添加归属信息-->
+	 <insert id="insertEmpRelInfo" parameterClass="empRelegationInfo">
+	 	insert into employee_relegation_info(
+		 	EMPLOYEEID,EMPLOYEENAME,PROJECTDIRECTOR,PROJECTMANAGER,PROJECTLEADER,GRADE,WORKSTAUS,BUSINESSLINE,BELONGEDTSPROJECT,
+		 	ADMITTANCEFREEDATE,ADMITTANCEBILLINGDATE,OUTSCENEESTIMATEDATE,OUTSCENEREALITYDATE,BELONGEDTSPROJECTID)
+	 	values(
+	 		#employeeId#,#employeeName#,#projectDirector#,#projectManager#,#projectLeader#,#grade#,#workstaus#,#businessLine#,
+	 		#belongedTSproject#,#admittancefreeDate#,#admittancebillingDate#,#outsceneestimateDate#,#outscenerealityDate#,#belongedTSprojectId#
+	 	)
+	 </insert>
+	 
+	 <!-- 修改归属信息 -->
+	 <update id="modifyEmpRelInfo" parameterClass="empRelegationInfo">
+		update employee_relegation_info 
+		set EMPLOYEENAME=#employeeName#,PROJECTDIRECTOR=#projectDirector#,PROJECTMANAGER=#projectManager#,
+			PROJECTLEADER=#projectLeader#,GRADE=#grade#,WORKSTAUS=#newWorkstatus#,BUSINESSLINE=#businessLine#,BELONGEDTSPROJECT=#newProName#,
+			ADMITTANCEFREEDATE=#admittancefreeDate#,ADMITTANCEBILLINGDATE=#admittancebillingDate#,OUTSCENEESTIMATEDATE=#outsceneestimateDate#,
+			OUTSCENEREALITYDATE=#outscenerealityDate#,BELONGEDTSPROJECTID=#belongedTSprojectId#
+		where EMPLOYEEID=#employeeId#  AND WORKSTAUS=#workstaus# AND BELONGEDTSPROJECT=#belongedTSproject#
+	</update>
+	
+	 <!-- 删除归属信息 -->
+	 <delete id="removeEmpRelInfo" parameterClass="empRelegationInfo">
+		delete from employee_relegation_info where EMPLOYEEID=#employeeId#  AND WORKSTAUS=#workstaus# AND BELONGEDTSPROJECT=#belongedTSproject#
+	</delete>
+	 
+	 <!-- 查询归属信息by员工编号 -->
+	 <select id="queryEriInfoByEid" parameterClass="empRelegationInfo" resultClass="empRelegationInfo">
+	 	select * from employee_relegation_info where EMPLOYEEID=#employeeId# AND WORKSTAUS=#workstaus# AND BELONGEDTSPROJECT=#belongedTSproject#
+	 </select>
+	 <!-- 查询某项目下的所有计费员工 -->
+	 <select id="queryEmpsByProName" parameterClass="java.lang.String" resultClass="empRelegationInfo">
+	 	SELECT * FROM EMPLOYEE_RELEGATION_INFO WHERE WORKSTAUS='2' AND BELONGEDTSPROJECT=#proName#
+	 </select>
+	 
+<!-- 员工归属信息  结束 -->
+
+<!-- 员工请假信息  开始 -->
+
+	<!-- 添加 -->
+	<insert id="addVacationInfo" parameterClass="empVacationInfo">
+		INSERT INTO EMPLOYEE_PASVACATION_INFO(
+		EMPLOYEEID,EMPLOYEENAME,DEPARTMENTID,DEPARTMENTNAME,LEAVETYPENAME,PSADATE,TOTALNUMBERHOURS,RECEIPTSTATUS,
+		APPROVEDBYDATE,ISWELFAREHOLIAYS)
+		VALUES(
+		#employeeId#,#employeeName#,#departmentId#,#departmentName#,#leaveTypeName#,#psaDate#,#totalNumberHours#,
+		#receiptStatus#,#approvedByDate#,#isWelfareHoliays#
+		)
+	</insert>
+	
+	<!-- 根据综合条件查询 -->
+	<select id="queryVacationInfo" parameterClass="empVacationInfo" resultClass="empVacationInfo" >
+	 	select * from employee_pasvacation_info where 1=1
+	 	<isNotEmpty prepend="AND"  property="employeeName" >
+	 		(EMPLOYEENAME=#employeeName# OR EMPLOYEEID=#employeeName#)
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="startDate" >
+	 		PSADATE &gt;= #startDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="endDate" >
+	 		PSADATE &lt;= #endDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="departmentName" >
+	 		DEPARTMENTNAME=#departmentName#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="leaveTypeName" >
+	 		LEAVETYPENAME=#leaveTypeName#
+	 	</isNotEmpty>
+	 	ORDER BY EMPLOYEENAME
+	 </select>
+<!-- 员工请假信息  结束 -->
+
+<!-- 员工离职信息  开始 -->
+	<!-- 根据综合条件查询 -->
+	<!-- 添加 -->
+	<insert id="addDimissionInfo" parameterClass="empDimissionInfo">
+		INSERT INTO employee_resignation_info(
+		EMPLOYEEID,EMPLOYEENAME,ENTRYDATE,DEPARTMENT,DEPENDENCY,PERSONNELSUBRANGETEXT,EMPLOYEEGROUP,COMMONPOSITION,
+		BUSINESSNATURE,ENTERPRISEFLOCK,ENTERPRISEFLOCKCODE,DEPARTMENTCODE,DEPENDENCYCODE,PERSONNELSUBRANGE,WORKPLACE,TRIALPERIOD,
+		APPRAISALDATE,RESIGNATIONDATE,RESIGNATIONSTATUS,RESIGNATIONREASONS,INITIATIVEORPASSIVE)
+		VALUES(
+		#employeeId#,#employeeName#,#entryDate#,#department#,#dependency#,#personnelSubrangeText#,#employeeGroup#,
+		#commonPosition#,#businessNature#,#enterpriseflock#,#enterpriseflockCode#,#departmentCode#,#dependencyCode#,
+		#personnelSubrange#,#workPlace#,#trialPeriod#,#appraisalDate#,#resignationDate#,#resignationStatus#,#resignationReasons#,
+		#initiativeOrPassive#
+		)
+	</insert>
+	<select id="queryDimissionInfo" parameterClass="empDimissionInfo" resultClass="empDimissionInfo" >
+	 	select * from employee_resignation_info where 1=1
+	 	<isNotEmpty prepend="AND"  property="employeeName" >
+	 		(EMPLOYEENAME=#employeeName# OR EMPLOYEEID=#employeeName#)
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="startDate" >
+	 		RESIGNATIONDATE &gt;= #startDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="endDate" >
+	 		RESIGNATIONDATE &lt;= #endDate#
+	 	</isNotEmpty>
+	 	<isNotEmpty prepend="AND"  property="department" >
+	 		DEPARTMENT=#department#
+	 	</isNotEmpty>
+	 	ORDER BY EMPLOYEENAME
+	 </select>
+	 <!-- 修改 -->
+	 <update id="modifyInfoById" parameterClass="empDimissionInfo">
+		update employee_resignation_info 
+		set RESIGNATIONREASONS=#resignationReasons#, INITIATIVEORPASSIVE=#initiativeOrPassive#
+		where EMPLOYEEID=#employeeId#
+	</update>
+<!-- 员工离职信息  结束 -->
+
+<!-- 客户报价  开始 -->
+	<select id="queryCstmQuoteInfo"  resultClass="cstmQuoteInfo" >
+	 	select * from customer_quote_info 
+	 </select>
+	 <insert id="addCstmQuoteInfo" parameterClass="cstmQuoteInfo">
+		INSERT INTO customer_quote_info(
+		PRICE4ST,OVERTIMEPRICE4ST,PRICE4MT,OVERTIMEPRICE4MT,PRICE4JT,OVERTIMEPRICE4JT,PRICE4SD,OVERTIMEPRICE4SD,
+		PRICE4MD,OVERTIMEPRICE4MD,PRICE4JD,OVERTIMEPRICE4JD,ID
+		)
+		VALUES(
+		#price4ST#,#overtimePrice4ST#,#price4MT#,#overtimePrice4MT#,#price4JT#,#overtimePrice4JT#,#price4SD#,#overtimePrice4SD#,
+		#price4MD#,#overtimePrice4MD#,#price4JD#,#overtimePrice4JD#,1
+		)
+	</insert> 
+	 <update id="modifyCstmQuoteInfo" parameterClass="cstmQuoteInfo">
+		update customer_quote_info 
+		set 
+		PRICE4ST=#price4ST#,OVERTIMEPRICE4ST=#overtimePrice4ST#,PRICE4MT=#price4MT#,OVERTIMEPRICE4MT=#overtimePrice4MT#,
+		PRICE4JT=#price4JT#,OVERTIMEPRICE4JT=#overtimePrice4JT#,PRICE4SD=#price4SD#,OVERTIMEPRICE4SD=#overtimePrice4SD#,
+		PRICE4MD=#price4MD#,OVERTIMEPRICE4MD=#overtimePrice4MD#,PRICE4JD=#price4JD#,OVERTIMEPRICE4JD=#overtimePrice4JD#
+		where ID=1
+	</update>
+<!-- 客户报价  结束 -->
+</sqlMap>

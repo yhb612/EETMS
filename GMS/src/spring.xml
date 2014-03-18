@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<!-- 加载properties文件 -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:gms.properties</value>
+		</property>
+		<!--可多次加载 -->
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+	
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    	<property name="driverClassName" value="${con.driverClassName}"/>
+    	<property name="url" value="${con.url}" />
+    	<property name="username" value="${con.username}" />
+    	<property name="password" value="${con.password}" />
+    </bean>
+    
+    
+    <!-- 配置spring管理iBatis -->  
+    <bean id="sqlMapClient"  class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" > 
+        	<property name="configLocation" value="classpath:SqlMapConfig.xml"/> 
+        	<property name="dataSource"  ref="dataSource"/> 
+    </bean> 
+    
+    
+    
+    <!--配置spring管理jdbc使用其jdbcTemplate类  -->
+     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id = "jdbcDao"  class = "com.iss.gms.basedao.JdbcTemplateDao">    
+         <property name="jdbcTemplate" ref="jdbcTemplate"/>    
+    </bean> 
+    
+    
+    
+    
+    
+    <!-- 通知器，用它来对属性值进行处理     
+    <bean   
+        class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">   
+        <property name="transactionInterceptor" ref="transactionInterceptor" />   
+    </bean>   -->
+    
+ 	<!-- dao层 -->
+    <bean id="userDao" class="com.iss.gms.dao.UserDao" >
+         <property name="dataSource">
+             <ref bean="dataSource" />
+         </property>
+         <property name="sqlMapClient">
+             <ref bean="sqlMapClient" />
+         </property>
+    </bean>
+    
+    <bean id="employeeDao" class="com.iss.gms.dao.emp.EmployeeDao" >
+         <property name="dataSource">
+             <ref bean="dataSource" />
+         </property>
+         <property name="sqlMapClient">
+             <ref bean="sqlMapClient" />
+         </property>
+    </bean>
+    
+     <bean id="projectDao" class="com.iss.gms.dao.pro.ProjectDao" >
+         <property name="dataSource">
+             <ref bean="dataSource" />
+         </property>
+         <property name="sqlMapClient">
+             <ref bean="sqlMapClient" />
+         </property>
+    </bean>
+
+    <bean id="hoursWorkDao" class="com.iss.gms.dao.hourswork.HoursWorkDao" > 
+         <property name="dataSource">
+             <ref bean="dataSource" />
+         </property>
+         <property name="sqlMapClient">
+             <ref bean="sqlMapClient" />
+         </property>
+    </bean>
+    
+    <bean id="securityDao" class="com.iss.gms.dao.security.SecurityDao" > 
+         <property name="dataSource">
+             <ref bean="dataSource" />
+         </property>
+         <property name="sqlMapClient">
+             <ref bean="sqlMapClient" />
+         </property>
+    </bean>
+       
+
+    <!-- service层 -->
+    <bean id="userService"  class="com.iss.gms.service.UserServiceImpl"> 
+ 		<property name="userDao" >
+ 				<ref bean="userDao" />
+ 		</property>
+	</bean> 
+	
+	<bean id="employeeService"  class="com.iss.gms.service.EmployeeServiceImpl"> 
+ 		<property name="employeeDao" >
+ 				<ref bean="employeeDao" />
+ 		</property>
+	</bean>
+
+	 
+	<bean id="projectService"  class="com.iss.gms.service.ProjectServiceImpl"> 
+ 		<property name="projectDao" >
+ 				<ref bean="projectDao" />
+ 		</property>
+	</bean>
+
+	
+	<bean id="hoursWorkService"  class="com.iss.gms.service.HoursWorkServiceImpl"> 
+ 		<property name="hoursWorkDao" >
+ 				<ref bean="hoursWorkDao" />
+ 		</property>
+	</bean>
+	
+	<bean id="loginService"  class="com.iss.gms.service.security.LoginServiceImpl"> 
+ 		<property name="securityDao" >
+ 				<ref bean="securityDao" />
+ 		</property>
+	</bean>
+	
+	<bean id="menuTreeService"  class="com.iss.gms.service.menu.MenuTreeServiceImpl"> 
+ 		<property name="securityDao" >
+ 				<ref bean="securityDao" />
+ 		</property>
+	</bean>
+	
+	
+
+	<!-- action层--> 
+	<bean  name="/login"   class="com.iss.gms.web.action.security.LoginAction">
+		<property name="loginService" ref="loginService"/>
+		<property name="menuTreeService" ref="menuTreeService"/>
+	</bean>
+	
+	 <bean  name="/user"   class="com.iss.gms.web.action.UserAction" >
+		<property name="userService" ref="userService"/>
+	</bean>
+	
+	<bean  name="/empbi"   class="com.iss.gms.web.action.emp.EmployeeBasicInfoAction">
+		<property name="employeeService" ref="employeeService"/>
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+	</bean>
+	
+	<bean  name="/empri"   class="com.iss.gms.web.action.emp.EmployeeRelegationInfoAction">
+		<property name="employeeService" ref="employeeService"/>
+		<property name="projectService" ref="projectService"/>
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+	</bean>
+	
+	<bean  name="/empvi"   class="com.iss.gms.web.action.emp.EmployeeVacationInfoAction">
+		<property name="employeeService" ref="employeeService"/>
+	</bean>
+	
+	<bean  name="/empdi"   class="com.iss.gms.web.action.emp.EmployeeDimissionInfoAction">
+		<property name="employeeService" ref="employeeService"/>
+	</bean>
+	
+	<bean  name="/hoursworkStd"   class="com.iss.gms.web.action.hourswork.HoursworkStandardAction">
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+	</bean>
+	
+	<bean  name="/imp"   class="com.iss.gms.web.action.ImportDataAction">
+		<property name="employeeService" ref="employeeService"/>
+		<property name="projectService" ref="projectService"/>
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+	</bean>
+	
+	<bean  name="/proj"   class="com.iss.gms.web.action.pro.ProjAction">
+		<property name="projectService" ref="projectService"/>
+	</bean>
+	
+	<bean  name="/cstmPri"   class="com.iss.gms.web.action.emp.CustomerQuoteInfoAction">
+		<property name="employeeService" ref="employeeService"/>
+		<property name="china_bank" value="${china_bank}"/>
+		<property name="chinabank4jsp" value="${page.chinabank}"/>
+	</bean>
+	
+	<bean  name="/wt4chk"   class="com.iss.gms.web.action.syssrch.WtDetail4CheckAction">
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+		<property name="employeeService" ref="employeeService"/>
+	</bean>
+	
+	<bean  name="/customer"   class="com.iss.gms.web.action.hourswork.CustomeerHourAction">
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+	</bean>
+	
+	<bean  name="/gapch"   class="com.iss.gms.web.action.hourswork.GapCheckAction">
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+		<property name="employeeService" ref="employeeService"/>
+		<property name="expPath" value="${gap.exportpath}"/>
+	</bean>
+	
+	<bean  name="/costPre"   class="com.iss.gms.web.action.cost.Prediction4CostAction">
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+		<property name="projectService" ref="projectService"/>
+		<property name="employeeService" ref="employeeService"/>
+		<property name="expenses" value="${cost.expenses}"/>
+		<property name="china_bank" value="${china_bank}"/>
+	</bean>
+	<bean  name="/hoursOT"   class="com.iss.gms.web.action.syssrch.HoursOverTimeMsgAction">
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+		<property name="employeeService" ref="employeeService"/>
+		<property name="china_bank" value="${china_bank}"/>
+	</bean>
+	<bean  name="/empRelSta"   class="com.iss.gms.web.action.syssrch.EmpRelStaAction">
+		<property name="employeeService" ref="employeeService"/>
+	</bean>
+	<bean  name="/cusIc"   class="com.iss.gms.web.action.syssrch.CusIncomeQueryAction">
+		<property name="hoursWorkService" ref="hoursWorkService"/>
+		<property name="employeeService" ref="employeeService"/>
+		<property name="china_bank" value="${china_bank}"/>
+	</bean>
+	
+	
+	
+	<!--定义事务管理器-->
+    <bean id="transactionManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">     
+            <property name="dataSource" ref="dataSource"/>   
+    </bean> 
+ 	
+ 	<!-- 定义拦截器 -->
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <!-- 配置事务管理器 -->
+        <property name="transactionManager" ref="transactionManager"></property>
+        <!--  配置事务属性 -->
+        <property name="transactionAttributes">
+            <props>
+            <!-- 拦截事务的方法设置 -->   
+            	<prop key="query*">PROPAGATION_REQUIRED,readOnly</prop>
+            	<prop key="add*">PROPAGATION_REQUIRED</prop>
+            	<prop key="del*">PROPAGATION_REQUIRED</prop>
+            	<prop key="remove*">PROPAGATION_REQUIRED</prop>
+                <prop key="modify*">PROPAGATION_REQUIRED</prop>
+<!--            	<prop key="*">PROPAGATION_REQUIRED</prop>-->
+            </props>
+        </property>
+        
+    </bean>
+    
+    
+    <!-- 定义代理机制  -->
+    <bean   
+        class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">   
+        	<property name="beanNames"> 
+        		<list>
+	        		<value>*Service</value>
+        		</list>
+        	</property> 
+        	<property name="interceptorNames"> 
+        		<list> 
+        			<value>transactionInterceptor</value>   
+        		</list> 
+        	</property>
+        	<!-- 默认代理接口，设置为代理类 -->
+        	<property name="proxyTargetClass" value="true"/>
+     </bean> 
+     
+</beans>

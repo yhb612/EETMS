@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/GMS_repository/!svn/ver/69/trunk/GMS/WebRoot
+END
+index.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/GMS_repository/!svn/ver/69/trunk/GMS/WebRoot/index.jsp
+END
+success.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/success.jsp
+END
+error.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/error.jsp
+END

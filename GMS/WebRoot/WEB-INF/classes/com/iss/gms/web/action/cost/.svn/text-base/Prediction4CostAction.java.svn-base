@@ -1,0 +1,213 @@
+package com.iss.gms.web.action.cost;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.validator.LazyValidatorForm;
+
+import com.iss.gms.entity.CostAndIncomeDetailInfo;
+import com.iss.gms.entity.CostAndIncomeInfo;
+import com.iss.gms.entity.CustomerQuoteInfo;
+import com.iss.gms.entity.CustomerVerifyHoursInfo;
+import com.iss.gms.entity.EmployeeBasicInfo;
+import com.iss.gms.entity.EmployeeRelegationInfo;
+import com.iss.gms.entity.ProjectInfo;
+import com.iss.gms.service.HoursWorkService;
+import com.iss.gms.service.IEmployeeService;
+import com.iss.gms.service.IProjectService;
+import com.iss.gms.utils.GmsUtils;
+
+/**
+ * @author Administrator
+ *收入成本预测
+ */
+public class Prediction4CostAction extends DispatchAction {
+
+	private String expenses;
+	private HoursWorkService hoursWorkService;
+	private IProjectService projectService;
+	private IEmployeeService employeeService;
+	
+
+	public void setEmployeeService(IEmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
+
+	public void setProjectService(IProjectService projectService) {
+		this.projectService = projectService;
+	}
+
+	public void setHoursWorkService(HoursWorkService hoursWorkService) {
+		this.hoursWorkService = hoursWorkService;
+	}
+
+	public void setExpenses(String expenses) {
+		this.expenses = expenses;
+	}
+	
+	public ActionForward initPage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		return mapping.findForward("success");
+	}
+
+	public ActionForward predict(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		LazyValidatorForm lzform = (LazyValidatorForm)form;
+		String year = (String)lzform.get("preYear");
+		String month = (String)lzform.get("preMonth");
+		try {
+		//根据年月获取该月的第一天和最后一天
+		Date lastDateOfMonth = GmsUtils.getLastDate(Integer.parseInt(year),Integer.parseInt(month));
+		Date firstDateOfMonth = GmsUtils.gmsFormToDate(year+"-"+month+"-1");
+		//查询该月内的项目
+		Map<String, Date> fldates = new HashMap<String, Date>();
+		fldates.put("lastDateOfMonth", lastDateOfMonth);
+		fldates.put("firstDateOfMonth", firstDateOfMonth);
+		List<ProjectInfo> proList = projectService.queryProByMonth(fldates);
+		//查询客户报价
+		CustomerQuoteInfo cqi = employeeService.queryCstmQuoteInfo();
+		
+		List<CostAndIncomeInfo> ciList = new ArrayList<CostAndIncomeInfo>();
+		//构建 “收入成本预测”页面显示所用实体
+		if(proList!=null&&proList.size()>0){
+			for(ProjectInfo tem : proList){
+				CostAndIncomeInfo caii = new CostAndIncomeInfo();
+				//置入项目信息
+				caii.setYearAndMonth(year+"-"+month);
+				caii.setProId(tem.getProId());
+				caii.setProjectName(tem.getProName());
+				caii.setProjectManager(tem.getProjectManager());
+				caii.setDepartment(tem.getImplementDepartment());
+				
+				//计费员工
+				List<EmployeeRelegationInfo> eriList =employeeService.queryEmpsByProName(tem.getProName()) ;
+				//计费人数
+				int chargingEmpCount =eriList.size() ;
+				caii.setBillingNumbers(String.valueOf(chargingEmpCount));
+				
+				//预计收入
+				float preIncome=0f;
+				//预计成本
+				float preCost=0f;
+				//计算预计报销
+				float preExpenses=0f;
+				if(expenses!=null&&expenses.trim().length()>0)
+					preExpenses = chargingEmpCount*Float.parseFloat(expenses);
+				
+				if(eriList!=null&&eriList.size()>0){
+					for(EmployeeRelegationInfo eri:eriList){
+						
+						CustomerVerifyHoursInfo cvhi = hoursWorkService.queryGradeAndTec(eri.getEmployeeId());
+						if(cvhi!=null){
+							// 计算收入()
+							if("测试".equals(cvhi.getTechnologyPlatform())){
+								if("高级".equals(cvhi.getTechnologyGrade())){
+									preIncome+=cqi.getPrice4ST()*22;
+								}else if("中级".equals(cvhi.getTechnologyGrade())){
+									preIncome+=cqi.getPrice4MT()*22;
+								}else if("初级".equals(cvhi.getTechnologyGrade())){
+									preIncome+=cqi.getPrice4JT()*22;
+								}
+							}else{
+								if("高级".equals(cvhi.getTechnologyGrade())){
+									preIncome+=cqi.getPrice4SD()*22;
+								}else if("中级".equals(cvhi.getTechnologyGrade())){
+									preIncome+=cqi.getPrice4MD()*22;
+								}else if("初级".equals(cvhi.getTechnologyGrade())){
+									preIncome+=cqi.getPrice4JD()*22;
+								}
+							}
+						}
+						//计算成本
+						List<EmployeeBasicInfo> ems = employeeService.queryByName(eri.getEmployeeId());
+						if(ems.size()==1){
+							EmployeeBasicInfo ebi = ems.get(0); 
+							preCost += ebi.getContractWages()+ebi.getSocietyindemnification();
+						}
+							
+					}
+				}
+				
+				caii.setPredictionCost(String.valueOf(preCost));
+				caii.setPredictionIncome(String.valueOf(preIncome));
+				caii.setPredictionExpenses(String.valueOf(preExpenses));
+				ciList.add(caii);
+			}
+		}
+		request.setAttribute("ciList", ciList);
+		return mapping.findForward("success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return mapping.findForward("error");
+		}
+	}
+	
+	
+	public ActionForward toDetail(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		List<CostAndIncomeDetailInfo> detailList = new ArrayList<CostAndIncomeDetailInfo>();
+		String proName;
+		try {
+			proName = GmsUtils.fix2utf(request.getParameter("proName"));
+			System.out.println(proName);
+			//查询项目计费人员
+			List<EmployeeRelegationInfo> eriList =employeeService.queryEmpsByProName(proName);
+			//查询客户报价
+			CustomerQuoteInfo cqi = employeeService.queryCstmQuoteInfo();
+			
+			if(eriList!=null&&eriList.size()>0){
+				for(EmployeeRelegationInfo eri :eriList){
+					CostAndIncomeDetailInfo cadi = new CostAndIncomeDetailInfo();
+					cadi.setEmpId(eri.getEmployeeId());
+					cadi.setEmpName(eri.getEmployeeName());
+					cadi.setDays("22");
+					CustomerVerifyHoursInfo cvhi = hoursWorkService.queryGradeAndTec(eri.getEmployeeId());
+					if(cvhi!=null){
+						if("测试".equals(cvhi.getTechnologyPlatform())){
+							if("高级".equals(cvhi.getTechnologyGrade())){
+								cadi.setCusGrade("高级");
+								cadi.setIncome(cqi.getPrice4ST());
+							}else if("中级".equals(cvhi.getTechnologyGrade())){
+								cadi.setCusGrade("中级");
+								cadi.setIncome(cqi.getPrice4MT());
+							}else if("初级".equals(cvhi.getTechnologyGrade())){
+								cadi.setCusGrade("初级");
+								cadi.setIncome(cqi.getPrice4JT());
+							}
+						}else{
+							if("高级".equals(cvhi.getTechnologyGrade())){
+								cadi.setCusGrade("高级");
+								cadi.setIncome(cqi.getPrice4SD());
+							}else if("中级".equals(cvhi.getTechnologyGrade())){
+								cadi.setCusGrade("中级");
+								cadi.setIncome(cqi.getPrice4MD());
+							}else if("初级".equals(cvhi.getTechnologyGrade())){
+								cadi.setCusGrade("初级");
+								cadi.setIncome(cqi.getPrice4JD());
+							}
+						}
+					}
+					detailList.add(cadi);
+				}
+			}
+		request.setAttribute("detailList", detailList);
+		return mapping.findForward("detail");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return mapping.findForward("error");
+		}
+	}
+}

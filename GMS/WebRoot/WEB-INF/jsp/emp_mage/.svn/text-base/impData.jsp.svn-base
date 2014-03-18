@@ -1,0 +1,41 @@
+<%@ page language="java" pageEncoding="utf-8"%>
+
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <html:base />
+
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<script type="text/javascript">
+ 		 //关闭详细信息
+			function submitted(){
+				document.forms[0].submit();
+				if(confirm("确定导入数据后关闭本页面吗？"))
+				{
+				  parent.g_close_pop();
+				}
+			  
+			}
+			
+ </script>
+  </head>
+  	
+  <body>
+  		<html:form action="imp.do?method=impInfo" method="post" enctype="multipart/form-data">
+  		<br/>
+  		<br/>
+  			<div style="text-align: center">
+  				<html:file property="file" /><html:submit property="ttt" styleClass="btn" value="导入数据"/>
+  				<html:hidden property="flag" value="${status}"/>
+  			</div>
+  		</html:form>
+  </body>
+</html>

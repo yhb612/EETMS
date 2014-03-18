@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/GMS_repository/!svn/ver/73/trunk/GMS/src/com/iss/gms/entity
+END
+EmployeeHoursDetailInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/GMS_repository/!svn/ver/73/trunk/GMS/src/com/iss/gms/entity/EmployeeHoursDetailInfo.java
+END
+EmployeeVacationInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/EmployeeVacationInfo.java
+END
+HoursWorkStandardInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/HoursWorkStandardInfo.java
+END
+ProjectInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/ProjectInfo.java
+END
+CostAndIncomeInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/GMS_repository/!svn/ver/85/trunk/GMS/src/com/iss/gms/entity/CostAndIncomeInfo.java
+END
+CustomerVerifyHoursInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/CustomerVerifyHoursInfo.java
+END
+Statistics4EveryGapType.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/Statistics4EveryGapType.java
+END
+EmployeeRelegationInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/GMS_repository/!svn/ver/40/trunk/GMS/src/com/iss/gms/entity/EmployeeRelegationInfo.java
+END
+CostAndIncomeDetailInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/GMS_repository/!svn/ver/85/trunk/GMS/src/com/iss/gms/entity/CostAndIncomeDetailInfo.java
+END
+EmpolyeeGapVerificationInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/EmpolyeeGapVerificationInfo.java
+END
+EmployeeDimissionInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/EmployeeDimissionInfo.java
+END
+HoursWorkStatisticsInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/entity/HoursWorkStatisticsInfo.java
+END
+CustomerQuoteInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/entity/CustomerQuoteInfo.java
+END
+EmployeeBasicInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/entity/EmployeeBasicInfo.java
+END

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/GMS_repository/!svn/ver/71/trunk/GMS/src/com/iss/gms/web/action/emp
+END
+EmployeeRelegationInfoAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/GMS_repository/!svn/ver/78/trunk/GMS/src/com/iss/gms/web/action/emp/EmployeeRelegationInfoAction.java
+END
+EmployeeDimissionInfoAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/GMS_repository/!svn/ver/52/trunk/GMS/src/com/iss/gms/web/action/emp/EmployeeDimissionInfoAction.java
+END
+CustomerQuoteInfoAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/src/com/iss/gms/web/action/emp/CustomerQuoteInfoAction.java
+END
+EmployeeBasicInfoAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/GMS_repository/!svn/ver/80/trunk/GMS/src/com/iss/gms/web/action/emp/EmployeeBasicInfoAction.java
+END
+EmployeeVacationInfoAction.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/GMS_repository/!svn/ver/52/trunk/GMS/src/com/iss/gms/web/action/emp/EmployeeVacationInfoAction.java
+END

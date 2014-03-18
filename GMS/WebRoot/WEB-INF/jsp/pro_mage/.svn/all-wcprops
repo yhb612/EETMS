@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/GMS_repository/!svn/ver/49/trunk/GMS/WebRoot/WEB-INF/jsp/pro_mage
+END
+addProInfo.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/GMS_repository/!svn/ver/49/trunk/GMS/WebRoot/WEB-INF/jsp/pro_mage/addProInfo.jsp
+END
+project_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/GMS_repository/!svn/ver/18/trunk/GMS/WebRoot/WEB-INF/jsp/pro_mage/project_mgr.jsp
+END
+updateProInfo.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/GMS_repository/!svn/ver/49/trunk/GMS/WebRoot/WEB-INF/jsp/pro_mage/updateProInfo.jsp
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/GMS_repository/!svn/ver/68/trunk/GMS/WebRoot/WEB-INF
+END
+struts-config.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/GMS_repository/!svn/ver/81/trunk/GMS/WebRoot/WEB-INF/struts-config.xml
+END
+web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/web.xml
+END
+.struts-config.mex
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/.struts-config.mex
+END
+tiles-defs.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/tiles-defs.xml
+END

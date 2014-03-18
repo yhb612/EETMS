@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >     
+    
+<sqlMap namespace="hourswork">
+	 <typeAlias alias="hoursWorkStdInfo" type="com.iss.gms.entity.HoursWorkStandardInfo"/>
+	 <typeAlias alias="hoursDetailInfo" type="com.iss.gms.entity.EmployeeHoursDetailInfo"/>
+	 <typeAlias alias="employeeBasicInfo" type="com.iss.gms.entity.EmployeeBasicInfo"/>
+	 <typeAlias alias="employeeRelegationInfo" type="com.iss.gms.entity.EmployeeRelegationInfo"/>
+	 <typeAlias alias="statistics4EveryGapType" type="com.iss.gms.entity.Statistics4EveryGapType"/>
+	 
+<!-- 工时详情表导入 	-->
+	<insert id="addHoursDetailInfo11" parameterClass="hoursDetailInfo">
+		insert into employee_hours_detail_info 
+		(EMPLOYEEID,EMPLOYEENAME,STANDARDDATETYPE,STANDARDDATE,STANDARDHOURS,CURRENTGAPHOURS,STANDARDWEEK)
+		values(#employeeId#,#employeeName#,#standardDateType#,#standardDate#,#standardHours#,#standardHours#,#standardWeek#)
+	</insert>
+
+</sqlMap>

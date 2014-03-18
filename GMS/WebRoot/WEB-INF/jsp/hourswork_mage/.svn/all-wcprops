@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/GMS_repository/!svn/ver/25/trunk/GMS/WebRoot/WEB-INF/jsp/hourswork_mage
+END
+workHours_confirm_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/GMS_repository/!svn/ver/25/trunk/GMS/WebRoot/WEB-INF/jsp/hourswork_mage/workHours_confirm_mgr.jsp
+END
+workHours_standard_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/GMS_repository/!svn/ver/5/trunk/GMS/WebRoot/WEB-INF/jsp/hourswork_mage/workHours_standard_mgr.jsp
+END
+workHours_GAP_mgr.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/GMS_repository/!svn/ver/82/trunk/GMS/WebRoot/WEB-INF/jsp/hourswork_mage/workHours_GAP_mgr.jsp
+END
