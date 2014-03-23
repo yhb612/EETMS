@@ -33,7 +33,7 @@ style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg.gif); MARGI
 		 	<img src="<%=request.getContextPath()%>/images/menu_seprator.gif" align=absMiddle> 
 		 <a href="<%=request.getContextPath()%>">退出系统</a> 
     </div>
-    <div style="DISPLAY: block; HEIGHT: 54px; font-size:x-large;margin-left: 70px;color: #AABFFF;letter-spacing: 3px">企业差旅管理系统11111</div>
+    <div style="DISPLAY: block; HEIGHT: 54px; font-size:x-large;margin-left: 70px;color: #AABFFF;letter-spacing: 3px">企业差旅管理系统</div>
     <div  style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg_nav.gif); BACKGROUND-REPEAT: repeat-x; HEIGHT: 30px">
       <table cellSpacing=0 cellPadding=0 width="100%">
         <tbody>
