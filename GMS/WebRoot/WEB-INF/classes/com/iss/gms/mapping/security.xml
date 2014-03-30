@@ -11,7 +11,7 @@
 	 </select>
 	 
 	  <select id="getAllMenu"  parameterClass="java.lang.String" resultClass="sysMenu" >
-	 	select * from SYSMENU 
+	 	select * from SYSMENU order by sequence
 	 </select>
 	 
 </sqlMap>

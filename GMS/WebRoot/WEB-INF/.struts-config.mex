@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FlowViewLayout Version="1.2">
+  <StrutsActivity path="/login.do" location="50,1250" dimension="296,104" />
   <StrutsActivity path="/user.do" location="3114,233" dimension="244,104" />
   <StrutsActivity path="/toIndex.do" location="350,50" dimension="267,104" />
   <StrutsActivity path="/empbi.do" location="425,233" dimension="356,104" />
@@ -18,8 +19,12 @@
   <StrutsActivity path="/empRelSta.do" location="650,1050" dimension="379,104" />
   <StrutsActivity path="/cusIc.do" location="1550,1050" dimension="324,104" />
   <StrutsActivity path="error;6" location="0,555" dimension="98,87" />
-  <StrutsActivity path="/success.jsp" location="3186,457" dimension="101,53" />
+  <StrutsActivity path="/WEB-INF/jsp/header.jsp" location="50,350" dimension="177,53" />
+  <StrutsActivity path="/WEB-INF/jsp/menu.jsp" location="950,1450" dimension="168,53" />
+  <StrutsActivity path="/WEB-INF/jsp/body.jsp" location="1850,1250" dimension="166,53" />
+  <StrutsActivity path="/WEB-INF/jsp/template.jsp" location="950,350" dimension="187,53" />
   <StrutsActivity path="error" location="3205,0" dimension="62,53" />
+  <StrutsActivity path="/success.jsp" location="3186,457" dimension="101,53" />
   <StrutsActivity path="indexLayout" location="1064,457" dimension="101,53" />
   <StrutsActivity path="/WEB-INF/jsp/emp_mage/impData.jsp" location="1441,457" dimension="254,53" />
   <StrutsActivity path="/WEB-INF/jsp/emp_mage/updateEmpInfo.jsp" location="0,457" dimension="295,53" />
@@ -45,7 +50,14 @@
   <StrutsActivity path="empRelSta" location="1250,1050" dimension="94,53" />
   <StrutsActivity path="cusIc" location="650,1550" dimension="61,53" />
   <StrutsActivity path="/error.jsp" location="5,742" dimension="87,53" />
-  <StrutsActivity path="/login.do" location="50,1250" dimension="296,104" />
+  <StrutsActivity path="/jsp/template.jsp" location="650,1250" dimension="130,53" />
+  <StrutsActivity path="F:\GMS\GMS\WebRoot\WEB-INF\jsp\example01.html" location="1850,650" dimension="342,53" />
+  <StrutsActivity path="/WEB-INF/jsp/right.htm" location="950,1250" dimension="168,53" />
+  <StrutsActivity path="/WEB-INF/jsp/bo'd.jsp" location="50,1450" dimension="163,53" />
+  <StrutsActivity path="/WEB-INF/jsp/bo.jsp" location="1250,1250" dimension="152,53" />
+  <StrutsActivity path="/WEB-INF/jsp/b.jsp" location="1550,1250" dimension="144,53" />
+  <StrutsActivity path="/WEB-INF/jsp/.jsp" location="350,1450" dimension="136,53" />
+  <StrutsActivity path="/WEB-INF/jsp/emp_mage/employeeMsgMgr.jsp" />
   <StrutsTransition id="/empri.do,success2,/WEB-INF/jsp/emp_mage/updateEmpRelInfo.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="2504,337" />
@@ -68,6 +80,12 @@
       <AbsolutePoint location="2407,397" />
       <AbsolutePoint location="1663,397" />
       <AbsolutePoint location="1663,457" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/login.do,success2,/WEB-INF/jsp/menu.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="198,1302" />
+      <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/customer.do,success,customertLayout,1" routingType="0">
@@ -131,16 +149,16 @@
       <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>
+  <StrutsTransition id="/login.do,success,/WEB-INF/jsp/template.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="198,1302" />
+      <AbsolutePoint location="0,0" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
   <StrutsTransition id="error;6,null,/error.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="49,642" />
       <AbsolutePoint location="49,742" />
-    </AutomaticBendpoints>
-  </StrutsTransition>
-  <StrutsTransition id="/user.do,success,/success.jsp,1" routingType="0">
-    <AutomaticBendpoints>
-      <AbsolutePoint location="3236,337" />
-      <AbsolutePoint location="3236,457" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/cusIc.do,success,cusIc,1" routingType="0">
@@ -149,12 +167,19 @@
       <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>
+  <StrutsTransition id="/user.do,success,/success.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="3236,337" />
+      <AbsolutePoint location="3236,457" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
   <StrutsTransition id="error,null,/login.do,2" routingType="0">
     <AutomaticBendpoints>
-      <AbsolutePoint location="3267,26" />
-      <AbsolutePoint location="3952,26" />
-      <AbsolutePoint location="3952,1302" />
-      <AbsolutePoint location="346,1302" />
+      <AbsolutePoint location="3267,18" />
+      <AbsolutePoint location="3948,18" />
+      <AbsolutePoint location="3948,1199" />
+      <AbsolutePoint location="198,1199" />
+      <AbsolutePoint location="198,1250" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/empbi.do,success3,/WEB-INF/jsp/emp_mage/impData.jsp,1" routingType="0">
@@ -181,12 +206,25 @@
       <AbsolutePoint location="441,885" />
     </AutomaticBendpoints>
   </StrutsTransition>
+  <StrutsTransition id="/login.do,success1,/WEB-INF/jsp/body.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="346,1318" />
+      <AbsolutePoint location="1933,1318" />
+      <AbsolutePoint location="1933,1303" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
   <StrutsTransition id="/imp.do,success1,indexLayout,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="1394,337" />
       <AbsolutePoint location="1394,397" />
       <AbsolutePoint location="1140,397" />
       <AbsolutePoint location="1140,457" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/login.do,success3,/WEB-INF/jsp/header.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="198,1302" />
+      <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/toIndex.do,success,indexLayout,1" routingType="0">
@@ -254,12 +292,10 @@
       <AbsolutePoint location="1465,233" />
     </AutomaticBendpoints>
   </StrutsTransition>
-  <StrutsTransition id="/login.do,success,indexLayout,1" routingType="0">
+  <StrutsTransition id="/empbi.do,success,/WEB-INF/jsp/emp_mage/employeeMsgMgr.jsp,1" routingType="0">
     <AutomaticBendpoints>
-      <AbsolutePoint location="246,1250" />
-      <AbsolutePoint location="246,600" />
-      <AbsolutePoint location="1114,600" />
-      <AbsolutePoint location="1114,510" />
+      <AbsolutePoint location="603,285" />
+      <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/empbi.do,success,empLayout,1" routingType="0">

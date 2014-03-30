@@ -14,18 +14,18 @@
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/dtree.css">
 </head>
 <body style="BACKGROUND-POSITION-Y: -120px; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg.gif); BACKGROUND-REPEAT: repeat-x">
-<table height="77%" cellSpacing=0 cellPadding=0 width="19%">
+<table height="100%" cellSpacing=0 cellPadding=0 width="25%" table-layout:fixed;">
   <tbody>
     <tr>
-      <td width=10 height=29><IMG src="<%=request.getContextPath()%>/images/bg_left_tl.gif"></td>
+      <td width=100 height=29><IMG src="<%=request.getContextPath()%>/images/bg_left_tl.gif"></td>
       <td style="FONT-SIZE: 18px; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg_left_tc.gif); COLOR: white; FONT-FAMILY: system">
       	
       </td>
-      <td width=10><img src="<%=request.getContextPath()%>/images/bg_left_tr.gif"></td>
+      <td width=100><img src="<%=request.getContextPath()%>/images/bg_left_tr.gif"></td>
     </tr>
     <tr>
       <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg_left_ls.gif)"></td>
-      <td  id = menu style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; HEIGHT: 100%; BACKGROUND-COLOR: WHITE" vAlign=top>
+      <td  id = menu style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; HEIGHT: 100%; BACKGROUND-COLOR: white" vAlign=top>
        
           <script type="text/javascript">
             <!--   
@@ -35,10 +35,10 @@
             <logic:iterate id="menuList" name="sysMenus">
             
             <c:if test="${menuList.islinked=='0'}">
-		      menuTree.add(Number(${menuList.sysMenuNo}),Number(${menuList.parent}),"${menuList.sysMenuName}");       		
+		      menuTree.add(Number(${menuList.sysMenuNo}),Number(${menuList.parent}),"${menuList.sysMenuName}",'','','right');       		
 		    </c:if>
 		    <c:if test="${menuList.islinked=='1'}">
-              menuTree.add(Number(${menuList.sysMenuNo}),Number(${menuList.parent}),"${menuList.sysMenuName}",'<%=request.getContextPath()%>/${menuList.linkAddress}');                   
+              menuTree.add(Number(${menuList.sysMenuNo}),Number(${menuList.parent}),"${menuList.sysMenuName}",'${menuList.linkAddress}','','right');                   
             </c:if>
 
 		    </logic:iterate>
@@ -52,9 +52,9 @@
       <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg_left_rs.gif)"></td>
     </tr>
     <tr>
-      <td width=10><img src="<%=request.getContextPath()%>/images/bg_left_bl.gif"></td>
+      <td width=100><img src="<%=request.getContextPath()%>/images/bg_left_bl.gif"></td>
       <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg_left_bc.gif)"></td>
-      <td width=10><img src="<%=request.getContextPath()%>/images/bg_left_br.gif"></td>
+      <td width=100><img src="<%=request.getContextPath()%>/images/bg_left_br.gif"></td>
     </tr>
    
   </tbody>

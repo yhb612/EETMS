@@ -23,7 +23,10 @@
       validate="false"
       input="error"
       cancellable="true" >
-      		<forward name="success"  path="indexLayout"/>
+      		<forward name="success"  path="/WEB-INF/jsp/template.jsp"/>
+      		<forward name="success1"  path="/WEB-INF/jsp/body.jsp"/>
+      		<forward name="success2"  path="/WEB-INF/jsp/menu.jsp"/>
+      		<forward name="success3"  path="/WEB-INF/jsp/header.jsp"/>
     </action>
       
     <action
@@ -52,7 +55,7 @@
       validate="false"
       input="error"
       cancellable="true" >
-      		<forward name="success"  path="empLayout"/>
+      		<forward name="success"  path="/WEB-INF/jsp/emp_mage/employeeMsgMgr.jsp"/>
       		<forward name="success1"  path="/WEB-INF/jsp/emp_mage/addEmpInfo.jsp"/>
       		<forward name="success2"  path="/WEB-INF/jsp/emp_mage/updateEmpInfo.jsp"/>
       		<forward name="success3"  path="/WEB-INF/jsp/emp_mage/impData.jsp"/>

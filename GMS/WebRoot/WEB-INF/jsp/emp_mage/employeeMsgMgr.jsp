@@ -99,7 +99,7 @@
           </script>
   </head>
   
-  <body class="bod">
+  <body body style="BACKGROUND-POSITION-Y: -120px; BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg.gif); BACKGROUND-REPEAT: repeat-x">
   <html:form action="/empbi.do?method=search" method="post">
 	<div >
   	<table cellSpacing=0 cellPadding=0 height="100%">
@@ -119,7 +119,7 @@
       <tr>
         <td style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/main_ls.gif)">&nbsp;</td>
         <td  style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; COLOR: #566984; PADDING-TOP: 10px; BACKGROUND-COLOR: white;width: 10px" vAlign=top align=left>
-			 <div style="width:900px">
+			 <div style="width:1050px">
 			 		<font style="color:#364c6d;  line-height: 12px; border-bottom: #bad6ec 1px solid; text-align: left" >员工姓名/员工编号:</font>
 			 		<html:text property="ename4b" styleClass="s4relquery"/>
 			 		<font style="color:#364c6d;  line-height: 12px; border-bottom: #bad6ec 1px solid; text-align: left" >入职日期:</font>

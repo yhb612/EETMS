@@ -50,7 +50,6 @@ public class LoginAction extends DispatchAction {
 			us.setPassword(pwd);
 			Userss user = loginService.getUser(us);
 			List sysMenus = menuTreeService.getAllMenu();
-			request.setAttribute("sysMenus", sysMenus);
 			//request.setAttribute("proMgrs4pro", proMgrs);
 			if(user == null){
 				int i = 1;
@@ -64,6 +63,33 @@ public class LoginAction extends DispatchAction {
 		}
 		return mapping.findForward("success");
 	}
+	
+	//返回body页面
+	public ActionForward returnBody(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		return mapping.findForward("success1");
+	}
+	
+	//返回menu页面
+	public ActionForward returnMenu(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		try{
+			List sysMenus = menuTreeService.getAllMenu();	
+			request.setAttribute("sysMenus", sysMenus);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			return mapping.findForward("error");
+		}
+		return mapping.findForward("success2");
+	}
+	//返回header页面
+	public ActionForward returnHeader(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		return mapping.findForward("success3");
+	}
+	
 
 	public void setLoginService(LoginService loginService) {
 		this.loginService = loginService;
