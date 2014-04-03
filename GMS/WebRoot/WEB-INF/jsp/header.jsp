@@ -40,8 +40,8 @@ style="BACKGROUND-IMAGE: url(<%=request.getContextPath()%>/images/bg.gif); MARGI
           <tr>
             <td>
               <div id = welcome><img src="<%=request.getContextPath()%>/images/nav_pre.gif" align=absMiddle> 
-              		欢迎 <span id=lblBra>软通动力</span> 
-              		<span id=lblDep>中行CBG实施部</span> [ ${requestScope.username} ] 光临 
+              		欢迎 <span id=lblBra></span> 
+              		<span id=lblDep></span> [ ${requestScope.username} ] 光临 
               </div>
             </td>
             <td align=right width="60%"> 

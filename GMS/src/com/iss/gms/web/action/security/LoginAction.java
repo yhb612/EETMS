@@ -1,11 +1,8 @@
 package com.iss.gms.web.action.security;
 
-import java.sql.SQLException;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -20,17 +17,7 @@ public class LoginAction extends DispatchAction {
 	private LoginService loginService;
 	private MenuTreeService menuTreeService;
 	
-	//private List sysMenus;
-	
-	//public List getSysMenus() {
-	//	return sysMenus;
-	//}
-
-	//public void setSysMenus(List sysMenus) {
-	//	this.sysMenus = sysMenus;
-	//}
-
-	public MenuTreeService getMenuTreeService() {
+    public MenuTreeService getMenuTreeService() {
 		return menuTreeService;
 	}
 
@@ -52,7 +39,6 @@ public class LoginAction extends DispatchAction {
 			List sysMenus = menuTreeService.getAllMenu();
 			//request.setAttribute("proMgrs4pro", proMgrs);
 			if(user == null){
-				int i = 1;
 				return mapping.findForward("error");
 			}
 			request.setAttribute("username",user.getUserName());	
@@ -83,10 +69,10 @@ public class LoginAction extends DispatchAction {
 		}
 		return mapping.findForward("success2");
 	}
+	
 	//∑µªÿheader“≥√Ê
 	public ActionForward returnHeader(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
-		
 		return mapping.findForward("success3");
 	}
 	
