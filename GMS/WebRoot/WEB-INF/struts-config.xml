@@ -44,7 +44,7 @@
       parameter="method"
       input="error"
       validate="false">
-      		<forward name="success"  path="indexLayout"/>
+      		<forward name="success"  path="/WEB-INF/jsp/body.jsp"/>
 	</action>
 	
     <action
